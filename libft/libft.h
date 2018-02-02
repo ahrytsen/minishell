@@ -6,7 +6,7 @@
 /*   By: ahrytsen <ahrytsen@student.unit.ua>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/10/28 05:35:20 by ahrytsen          #+#    #+#             */
-/*   Updated: 2018/02/02 17:50:57 by ahrytsen         ###   ########.fr       */
+/*   Updated: 2018/02/02 19:54:13 by ahrytsen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,6 @@
 # include <string.h>
 # include <sys/types.h>
 # include <sys/uio.h>
-
 
 # define MOD(a)(a >= 0 ? a : -a)
 
