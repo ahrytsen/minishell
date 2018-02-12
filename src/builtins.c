@@ -1,28 +1,37 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   minishell.h                                        :+:      :+:    :+:   */
+/*   builtins.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ahrytsen <ahrytsen@student.unit.ua>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2018/02/02 17:32:57 by ahrytsen          #+#    #+#             */
-/*   Updated: 2018/02/12 18:12:14 by ahrytsen         ###   ########.fr       */
+/*   Created: 2018/02/12 15:02:36 by ahrytsen          #+#    #+#             */
+/*   Updated: 2018/02/12 21:05:59 by ahrytsen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef MINISHELL_H
-# define MINISHELL_H
+#include <minishell.h>
 
-# include <libft.h>
-# include <sys/param.h>
-# include <signal.h>
-
-typedef struct	s_builtins
+void	ft_echo(char **av)
 {
-	char	*cmd;
-	void	(*ft_builtin)();
-}				t_builtins;
+	int	i;
+	int n;
 
-void			ft_echo(char **av);
-void			ft_exit(char **av);
-#endif
+	i = 0;
+	n = 0;
+	ft_strcmp(av[0], "-n") ? n++ : i++;
+	while(av[i])
+		ft_printf("%s", av[i++]);
+	n ? ft_printf("\n") : 0;
+}
+
+void	ft_exit(char **av)
+{
+
+	exit(0);
+}
+
+/*void 	ft_cd(char **av)
+{
+
+}*/
