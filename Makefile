@@ -6,7 +6,7 @@
 #    By: ahrytsen <ahrytsen@student.unit.ua>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2017/12/30 18:43:03 by ahrytsen          #+#    #+#              #
-#    Updated: 2018/02/12 15:26:54 by ahrytsen         ###   ########.fr        #
+#    Updated: 2018/02/14 12:55:42 by ahrytsen         ###   ########.fr        #
 #                                                                              #
 #******************************************************************************#
 
@@ -16,7 +16,7 @@ DIROBJ		=	./obj/
 INCLUDE		=	-I./inc/ -I./libft/
 SUB_MAKE	=	./libft/
 SUB_OBJ		=	libftprintf.a
-INC_LIB		=	-L./libft -lftprintf
+INC_LIB		=	-L./libft -lftprintf -ltermcap
 SRC			=	minishell.c builtins.c
 HDR			=	inc/minishell.h
 OBJ			=	$(addprefix $(DIROBJ), $(SRC:.c=.o))

@@ -6,7 +6,7 @@
 /*   By: ahrytsen <ahrytsen@student.unit.ua>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/12 15:02:36 by ahrytsen          #+#    #+#             */
-/*   Updated: 2018/02/12 21:05:59 by ahrytsen         ###   ########.fr       */
+/*   Updated: 2018/02/15 21:18:08 by ahrytsen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,8 +27,12 @@ void	ft_echo(char **av)
 
 void	ft_exit(char **av)
 {
-
 	exit(0);
+}
+
+int 	ft_env(char **argv, char **env)
+{
+
 }
 
 /*void 	ft_cd(char **av)

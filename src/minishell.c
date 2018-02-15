@@ -6,7 +6,7 @@
 /*   By: ahrytsen <ahrytsen@student.unit.ua>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/02 11:02:52 by ahrytsen          #+#    #+#             */
-/*   Updated: 2018/02/12 20:41:38 by ahrytsen         ###   ########.fr       */
+/*   Updated: 2018/02/14 20:20:35 by ahrytsen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,39 +49,37 @@ void	ft_exec(char **cmd)
 void sig_handler(int signo)
 {
   if (signo == SIGINT)
-	  write(0, "\177\177", 2);
+	  ft_printf("\n");
   return ;
 }
 
-int		main(int ac, char **av, char **environ)
+int		main(int ac, char **av, char **env)
 {
 	char	pwd[MAXPATHLEN];
 	char	*cmds;
 	char	**cmd;
 	int		i;
+	struct termios tty;
 
+	tcgetattr (0, &tty);
+	tty.c_lflag &= ~(ECHOCTL);
+	tcsetattr (0, TCSADRAIN, &tty);
 	signal(SIGINT, sig_handler);
-	i = 0;
-	while (environ[i])
-		ft_printf("%s\n", environ[i++]);
 	while (1)
 	{
-		ft_printf("%s $>", getcwd(pwd, MAXPATHLEN));
-		if (get_next_line(0, &cmds) == 1)
+		ft_printf("%s $> ", getcwd(pwd, MAXPATHLEN));
+		get_next_line(0, &cmds);
+		i = 0;
+		cmd = ft_strsplit(cmds, ';');
+		while (cmd[i])
 		{
-			i = 0;
-			cmd = ft_strsplit(cmds, ';');
-			while (cmd[i])
-			{
-				ft_exec(ft_strsplit(cmd[i], ' '));
-				free(cmd[i++]);
-			}
-			free(cmd);
+			ft_exec(ft_strsplit(cmd[i], ' '));
+			free(cmd[i++]);
 		}
-		free(cmds);
+		free(cmd);
 	}
+	free(cmds);
 }
-
 
 /* int main(void) */
 /* { */
