@@ -6,7 +6,7 @@
 /*   By: ahrytsen <ahrytsen@student.unit.ua>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/02 17:32:57 by ahrytsen          #+#    #+#             */
-/*   Updated: 2018/02/15 20:25:45 by ahrytsen         ###   ########.fr       */
+/*   Updated: 2018/02/17 17:32:47 by ahrytsen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,13 @@
 # include <fcntl.h>
 # include <termios.h>
 
-
+typedef struct	s_env
+{
+	int		v;
+	int		i;
+	char	*altpath;
+	char	**exec;
+}				t_env;
 typedef struct	s_builtins
 {
 	char	*cmd;
@@ -28,10 +34,14 @@ typedef struct	s_builtins
 }				t_builtins;
 
 void			ft_echo(char **av);
+void		 	ft_cd(char **av, const char ***env);
+void			ft_env(char **av, const char ***env);
+char			**ft_cpyenv(char **src_env);
 char			*ft_getenv(const char **env, const char *name);
-int				ft_setenv(void **envp, const char *name,
+int				ft_setenv(const char ***envp, const char *name,
 							const char *value, int overwrite);
 int				ft_unsetenv(const char **env, const char *name);
+void			ft_clearenv(const char **env);
 void			ft_exit(char **av);
 
 #endif

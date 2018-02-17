@@ -6,7 +6,7 @@
 /*   By: ahrytsen <ahrytsen@student.unit.ua>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/15 13:42:48 by ahrytsen          #+#    #+#             */
-/*   Updated: 2018/02/15 20:28:35 by ahrytsen         ###   ########.fr       */
+/*   Updated: 2018/02/17 19:53:30 by ahrytsen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,42 +32,37 @@ static char	*ft_new_env_str(const char *name, const char *value)
 
 char		*ft_getenv(const char **env, const char *name)
 {
-	size_t	name_l;
-
 	if (!name)
 		return (NULL);
-	name_l = ft_strlen(name);
 	while (*env)
 	{
-		if (ft_strnequ(*env, name, name_l))
+		if (ft_strcmp(*env, name) == '=')
 			return (ft_strchr(*env, '=') + 1);
 		env++;
 	}
 	return (NULL);
 }
 
-int			ft_setenv(void **envp, const char *name,
+int			ft_setenv(const char ***envp, const char *name,
 						const char *value, int overwrite)
 {
-	size_t	i;
-	char	**env;
-	char	*tmp;
-	size_t	name_l;
+	size_t		i;
+	const char	**env;
+	char		*tmp;
 
 	i = -1;
 	env = *envp;
 	if (!(tmp = ft_new_env_str(name, value)))
 		return (-1);
-	name_l = ft_strlen(name);
 	while (env[++i])
-		if (ft_strnequ(env[i], name, name_l))
+		if (ft_strcmp(env[i], name) == '=')
 		{
 			if (!overwrite)
 				return (-1);
-			free(*env);
-			return ((*env = tmp) ? 0 : -1);
+			free((void*)env[i]);
+			return ((env[i] = tmp) ? 0 : -1);
 		}
-	if (!(env = (char**)malloc(sizeof(char*) * (i + 2))))
+	if (!(env = malloc(sizeof(char*) * (i + 2))))
 		return (-1);
 	ft_memcpy(env, *envp, sizeof(char*) * i);
 	env[i] = tmp;
@@ -78,17 +73,27 @@ int			ft_setenv(void **envp, const char *name,
 
 int			ft_unsetenv(const char **env, const char *name)
 {
-	size_t	name_l;
-
 	if (!name || ft_strchr(name, '='))
 		return (-1);
-	name_l = ft_strlen(name);
 	while (*env)
-		if (ft_strnequ(*env++, name, name_l))
+	{
+		if (ft_strcmp(*env, name) == '=')
 			break ;
+		env++;
+	}
 	if (!*env)
 		return (-1);
 	while (*env++)
 		*(env - 1) = *env;
 	return (0);
+}
+
+void		ft_clearenv(const char **env)
+{
+	while (*env)
+	{
+		free((void*)*env);
+		*env = NULL;
+		env++;
+	}
 }
