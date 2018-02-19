@@ -6,7 +6,7 @@
 /*   By: ahrytsen <ahrytsen@student.unit.ua>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/02 11:02:52 by ahrytsen          #+#    #+#             */
-/*   Updated: 2018/02/17 19:58:20 by ahrytsen         ###   ########.fr       */
+/*   Updated: 2018/02/19 21:05:54 by ahrytsen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,28 +25,60 @@ const static t_builtins	g_builtins[] =
 	{NULL, NULL}
 };
 
-void	ft_wrong_cmd(char *w_cmd)
+char		*ft_search_exec(char **cmd, char **env, char *altpath)
 {
-	ft_putstr_fd(w_cmd, 2);
-	ft_putstr_fd(": command not found\n", 2);
+	int				i;
+	char			*exec_path;
+	char			**path;
+
+	i = 0;
+	exec_path = NULL;
+	if (!(path = ft_strsplit(altpath ? altpath : ft_getenv(env, "PATH"), ':')))
+		return (NULL);
+	while (path[i])
+	{
+		if (!(exec_path = malloc(ft_strlen(path[i]) + ft_strlen(*cmd) + 2)))
+			return (NULL);
+		ft_strcpy(exec_path, path[i]);
+		ft_strcat(exec_path, "/");
+		ft_strcat(exec_path, *cmd);
+		if (!access(exec_path, X_OK))
+			break;
+		ft_memdel(&exec_path);
+		free(path[i++]);
+	}
+	while (path[i])
+		free(path[i++]);
+	free(path);
+	return (exec_path);
 }
 
-void	ft_exec(char **cmd, char ***env)
+void	ft_exec(char **cmd, char ***env, char *altpath)
 {
 	int		i;
 
 	i = 0;
-	while(g_builtins[i].cmd && ft_strcmp(cmd[0], g_builtins[i].cmd))
-		i++;
-	g_builtins[i].cmd ? g_builtins[i].ft_builtin(cmd + 1, env)
-		: ft_wrong_cmd(cmd[0]);
+	if (!ft_strchr(*cmd, '/'))
+	{
+		while(g_builtins[i].cmd && ft_strcmp(cmd[0], g_builtins[i].cmd))
+			i++;
+		g_builtins[i].cmd ? g_builtins[i].ft_builtin(cmd + 1, env)
+			: ft_wrong_cmd(cmd[0]);
+	}
+	else
+	{
+		if (access(*cmd, X_OK) == 0)
+			fork() ? wait(&i) : execve(*cmd, cmd, env);
+		else
+			ft_dprintf(2, "%s: command not found or permission denied\n", *cmd);
+	}
 	i = 0;
 	while (cmd[i])
 		free(cmd[i++]);
 	free(cmd);
 }
 
-void sig_handler(int signo)
+void	sig_handler(int signo)
 {
   if (signo == SIGINT)
 	  ft_printf("\n");

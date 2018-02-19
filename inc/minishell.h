@@ -6,7 +6,7 @@
 /*   By: ahrytsen <ahrytsen@student.unit.ua>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/02 17:32:57 by ahrytsen          #+#    #+#             */
-/*   Updated: 2018/02/17 17:32:47 by ahrytsen         ###   ########.fr       */
+/*   Updated: 2018/02/19 19:54:46 by ahrytsen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,9 @@
 
 # include <libft.h>
 # include <sys/param.h>
+# include <sys/types.h>
+# include <sys/dir.h>
+# include <dirent.h>
 # include <signal.h>
 # include <term.h>
 # include <fcntl.h>

@@ -6,7 +6,7 @@
 /*   By: ahrytsen <ahrytsen@student.unit.ua>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/12/09 19:54:49 by ahrytsen          #+#    #+#             */
-/*   Updated: 2017/12/29 20:28:39 by ahrytsen         ###   ########.fr       */
+/*   Updated: 2018/02/19 17:03:12 by ahrytsen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,10 @@ typedef struct	s_arg
 }				t_arg;
 
 int				ft_printf(const char *format, ...);
+int				ft_dprintf(int fd, const char *format, ...);
+/*
+**int				ft_asprintf(char *str, const char *format, ...);
+*/
 /*
 **				Buffer managment!
 */
@@ -60,7 +64,7 @@ t_buf			*ft_newbuf(void);
 void			ft_putchar_buf(t_buf **pbuf, int c);
 void			ft_putustr_buf(t_buf **pbuf, int *str, ssize_t len);
 void			ft_putstr_buf(t_buf **pbuf, char *str, ssize_t len);
-ssize_t			ft_print_buf(t_buf *pbuf, t_buf *pbuf_head);
+ssize_t			ft_print_buf(int fd, t_buf *pbuf, t_buf *pbuf_head);
 /*
 **				Helpers!
 */

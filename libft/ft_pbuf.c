@@ -6,13 +6,13 @@
 /*   By: ahrytsen <ahrytsen@student.unit.ua>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/12/16 18:18:01 by ahrytsen          #+#    #+#             */
-/*   Updated: 2017/12/29 17:04:58 by ahrytsen         ###   ########.fr       */
+/*   Updated: 2018/02/19 17:02:20 by ahrytsen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_printf.h"
 
-ssize_t	ft_print_buf(t_buf *pbuf, t_buf *pbuf_head)
+ssize_t	ft_print_buf(int fd, t_buf *pbuf, t_buf *pbuf_head)
 {
 	ssize_t	ret;
 	t_buf	*tmp;
@@ -21,13 +21,13 @@ ssize_t	ft_print_buf(t_buf *pbuf, t_buf *pbuf_head)
 	while (pbuf_head)
 	{
 		tmp = pbuf_head->next;
-		pbuf ? write(1, pbuf_head->str, pbuf_head->len) : 0;
+		pbuf || fd >= 0 ? write(fd, pbuf_head->str, pbuf_head->len) : 0;
 		free(pbuf_head->str);
 		ret += pbuf_head->len;
 		free(pbuf_head);
 		pbuf_head = tmp;
 	}
-	return (pbuf ? ret : -1);
+	return (pbuf || fd >= 0 ? ret : -1);
 }
 
 void	ft_putchar_buf(t_buf **pbuf, int c)

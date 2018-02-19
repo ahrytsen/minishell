@@ -6,7 +6,7 @@
 /*   By: ahrytsen <ahrytsen@student.unit.ua>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/12 15:02:36 by ahrytsen          #+#    #+#             */
-/*   Updated: 2018/02/17 18:18:22 by ahrytsen         ###   ########.fr       */
+/*   Updated: 2018/02/19 17:48:53 by ahrytsen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,8 @@ void	ft_echo(char **av)
 
 void	ft_exit(char **av)
 {
-	exit(0);
+	ft_printf("exit\n");
+	exit(*av ? ft_atoi(*av) : 0);
 }
 
 void 	ft_cd(char **av, const char ***env)
