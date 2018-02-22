@@ -6,7 +6,7 @@
 /*   By: ahrytsen <ahrytsen@student.unit.ua>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/19 15:44:16 by ahrytsen          #+#    #+#             */
-/*   Updated: 2018/02/19 15:44:21 by ahrytsen         ###   ########.fr       */
+/*   Updated: 2018/02/22 22:03:48 by ahrytsen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,9 +30,12 @@ static char	*ft_new_env_str(const char *name, const char *value)
 	return (new_env);
 }
 
-char		*ft_getenv(const char **env, const char *name)
+char		*ft_getenv(const char *name)
 {
-	if (!name)
+	char	**env;
+
+	env = msh_get_environ()->env;
+	if (!name || !env)
 		return (NULL);
 	while (*env)
 	{
@@ -43,16 +46,14 @@ char		*ft_getenv(const char **env, const char *name)
 	return (NULL);
 }
 
-int			ft_setenv(const char ***envp, const char *name,
-						const char *value, int overwrite)
+int			ft_setenv(const char *name, const char *value, int overwrite)
 {
 	size_t		i;
 	const char	**env;
 	char		*tmp;
 
 	i = -1;
-	env = *envp;
-	if (!(tmp = ft_new_env_str(name, value)))
+	if (!(tmp = ft_new_env_str(name, value)) || !(env = msh_get_environ()->env))
 		return (-1);
 	while (env[++i])
 		if (ft_strcmp(env[i], name) == '=')
@@ -62,25 +63,23 @@ int			ft_setenv(const char ***envp, const char *name,
 			free((void*)env[i]);
 			return ((env[i] = tmp) ? 0 : -1);
 		}
-	if (!(env = malloc(sizeof(char*) * (i + 2))))
+	if (!(env = ft_memalloc(sizeof(char*) * (i + 2))))
 		return (-1);
-	ft_memcpy(env, *envp, sizeof(char*) * i);
+	ft_memcpy(env, msh_get_environ()->env, sizeof(char*) * i);
 	env[i] = tmp;
-	env[i + 1] = NULL;
-	free(*envp);
-	return ((*envp = env) ? 0 : -1);
+	free(msh_get_environ()->env);
+	return ((msh_get_environ()->env = env) ? 0 : -1);
 }
 
-int			ft_unsetenv(const char **env, const char *name)
+int			ft_unsetenv(const char *name)
 {
-	if (!name || ft_strchr(name, '='))
+	char	**env;
+
+	env = msh_get_environ()->env;
+	if (!env || !name || ft_strchr(name, '='))
 		return (-1);
-	while (*env)
-	{
-		if (ft_strcmp(*env, name) == '=')
-			break ;
+	while (*env && ft_strcmp(*env, name) != '=')
 		env++;
-	}
 	if (!*env)
 		return (-1);
 	while (*env++)
@@ -88,9 +87,12 @@ int			ft_unsetenv(const char **env, const char *name)
 	return (0);
 }
 
-void		ft_clearenv(const char **env)
+void		ft_clearenv(void)
 {
-	while (*env)
+	char **env;
+
+	env = msh_get_environ()->env;
+	while (env && *env)
 	{
 		free((void*)*env);
 		*env = NULL;

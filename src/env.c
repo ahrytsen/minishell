@@ -6,7 +6,7 @@
 /*   By: ahrytsen <ahrytsen@student.unit.ua>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/16 17:09:28 by ahrytsen          #+#    #+#             */
-/*   Updated: 2018/02/17 19:34:34 by ahrytsen         ###   ########.fr       */
+/*   Updated: 2018/02/20 17:16:59 by ahrytsen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,11 +56,17 @@ static int	ft_env_flags(char ***av, const char **env, t_env *options)
 	return (0);
 }
 
-void		ft_env(char **av, const char ***env)
+int			ft_env(char **av, const char ***env)
 {
 	char	*tmp;
+	int		st;
 	t_env	options;
 
+	if (fork())
+	{
+		wait(&st);
+		return (st);
+	}
 	ft_bzero(&options, sizeof(t_env));
 	while (*av && **av == '-')
 	{
@@ -77,10 +83,14 @@ void		ft_env(char **av, const char ***env)
 		ft_setenv(env, *av++, ++tmp, 1);
 	}
 	!options.exec && *av ? options.exec = av : 0;
-	options.exec ? ft_printf("lol\n") : ft_env_print(*env);
+	if (options.exec)
+		fork() ? wait(&st) : ft_exec(options.exec, env, options.altpath);
+	else
+		ft_env_print(*env);
+	exit(0);
 }
 
-char		**ft_cpyenv(char **src_env)
+char		**ft_cpyenv(const char **src_env)
 {
 	char	**new_env;
 	size_t	env_l;

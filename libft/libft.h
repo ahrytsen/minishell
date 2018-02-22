@@ -6,7 +6,7 @@
 /*   By: ahrytsen <ahrytsen@student.unit.ua>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/10/28 05:35:20 by ahrytsen          #+#    #+#             */
-/*   Updated: 2018/02/02 19:54:13 by ahrytsen         ###   ########.fr       */
+/*   Updated: 2018/02/20 15:33:03 by ahrytsen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,10 @@
 **				ft_printf
 */
 int				ft_printf(const char *format, ...);
+int				ft_dprintf(int fd, const char *format, ...);
+/*
+**int				ft_asprintf(char *str, const char *format, ...);
+*/
 /*
 **				Get_Next_Line
 */

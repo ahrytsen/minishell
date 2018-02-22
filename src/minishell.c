@@ -6,7 +6,7 @@
 /*   By: ahrytsen <ahrytsen@student.unit.ua>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/02 11:02:52 by ahrytsen          #+#    #+#             */
-/*   Updated: 2018/02/19 21:05:54 by ahrytsen         ###   ########.fr       */
+/*   Updated: 2018/02/22 22:03:52 by ahrytsen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,16 +16,14 @@ const static t_builtins	g_builtins[] =
 {
 	{"echo", &ft_echo},
 	{"cd", &ft_cd},
-/*
-**	{"setenv", &ft_setenv},
-**	{"unsetenv", &ft_unsetenv},
-*/
+	{"setenv", &ft_setenv_builtin},
+	{"unsetenv", &ft_unsetenv_builtin},
 	{"env", &ft_env},
 	{"exit", &ft_exit},
 	{NULL, NULL}
 };
 
-char		*ft_search_exec(char **cmd, char **env, char *altpath)
+char		*ft_search_exec(char **cmd, const char **env,const char *altpath)
 {
 	int				i;
 	char			*exec_path;
@@ -44,7 +42,7 @@ char		*ft_search_exec(char **cmd, char **env, char *altpath)
 		ft_strcat(exec_path, *cmd);
 		if (!access(exec_path, X_OK))
 			break;
-		ft_memdel(&exec_path);
+		ft_memdel((void**)&exec_path);
 		free(path[i++]);
 	}
 	while (path[i])
@@ -53,7 +51,7 @@ char		*ft_search_exec(char **cmd, char **env, char *altpath)
 	return (exec_path);
 }
 
-void	ft_exec(char **cmd, char ***env, char *altpath)
+void	ft_exec(char **cmd, const char ***env, char *altpath)
 {
 	int		i;
 
@@ -63,51 +61,63 @@ void	ft_exec(char **cmd, char ***env, char *altpath)
 		while(g_builtins[i].cmd && ft_strcmp(cmd[0], g_builtins[i].cmd))
 			i++;
 		g_builtins[i].cmd ? g_builtins[i].ft_builtin(cmd + 1, env)
-			: ft_wrong_cmd(cmd[0]);
+			: ft_printf("%s\n", *cmd);
 	}
 	else
 	{
 		if (access(*cmd, X_OK) == 0)
-			fork() ? wait(&i) : execve(*cmd, cmd, env);
+			fork() ? wait(&i) : execve(*cmd, cmd, *env);
 		else
 			ft_dprintf(2, "%s: command not found or permission denied\n", *cmd);
 	}
 	i = 0;
 	while (cmd[i])
 		free(cmd[i++]);
-	free(cmd);
+	//free(cmd);
 }
 
 void	sig_handler(int signo)
 {
   if (signo == SIGINT)
-	  ft_printf("\n");
+	  ft_printf("");
   return ;
 }
+void	msh_init()
+{
+	extern const char	**eniron;
+	int					shlvl;
 
-int		main(int ac, char **av, char **envp)
+	msh_get_environ()->env = ft_cpyenv(environ);
+	signal(SIGINT, sig_handler);
+	signal(SIGINT, sig_handler);
+	signal(SIGINT, sig_handler);
+	signal(SIGINT, sig_handler);
+}
+
+int		main(int ac, char **av, const char **envp)
 {
 	char	**env;
 	char	pwd[MAXPATHLEN];
 	char	*cmds;
 	char	**cmd;
 	int		i;
-	/*struct termios tty;
+	struct termios tty;
 
 	tcgetattr (0, &tty);
 	tty.c_lflag &= ~(ECHOCTL);
-	tcsetattr (0, TCSADRAIN, &tty);*/
-	signal(SIGINT, sig_handler);
+	tcsetattr (0, TCSASOFT, &tty);
+
 	env = ft_cpyenv(envp);
 	while (1)
 	{
 		ft_printf("%s $> ", getcwd(pwd, MAXPATHLEN));
-		get_next_line(0, &cmds);
+		if (!get_next_line(0, &cmds))
+			return 0;
 		i = 0;
 		cmd = ft_strsplit(cmds, ';');
 		while (cmd[i])
 		{
-			ft_exec(ft_strsplit(cmd[i], ' '), &env);
+			ft_exec(ft_strsplit(cmd[i], ' '), &env, NULL);
 			free(cmd[i++]);
 		}
 		free(cmd);
