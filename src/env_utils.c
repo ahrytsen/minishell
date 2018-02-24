@@ -6,7 +6,7 @@
 /*   By: ahrytsen <ahrytsen@student.unit.ua>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/19 15:44:16 by ahrytsen          #+#    #+#             */
-/*   Updated: 2018/02/22 22:03:48 by ahrytsen         ###   ########.fr       */
+/*   Updated: 2018/02/23 18:33:30 by ahrytsen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,15 +87,21 @@ int			ft_unsetenv(const char *name)
 	return (0);
 }
 
-void		ft_clearenv(void)
+char		**ft_dupstr_arr(const char **src_arr)
 {
-	char **env;
+	char	**new_arr;
+	size_t	arr_l;
 
-	env = msh_get_environ()->env;
-	while (env && *env)
+	arr_l = 0;
+	while (src_arr[arr_l])
+		arr_l++;
+	if (!(new_arr = malloc(sizeof(char*) * (arr_l + 1))))
+		return (NULL);
+	arr_l = 0;
+	while (src_arr[arr_l])
 	{
-		free((void*)*env);
-		*env = NULL;
-		env++;
+		new_arr[arr_l] = ft_strdup(src_arr[arr_l]);
+		arr_l++;
 	}
+	return (new_arr);
 }

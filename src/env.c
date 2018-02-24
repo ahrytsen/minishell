@@ -6,11 +6,12 @@
 /*   By: ahrytsen <ahrytsen@student.unit.ua>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/16 17:09:28 by ahrytsen          #+#    #+#             */
-/*   Updated: 2018/02/20 17:16:59 by ahrytsen         ###   ########.fr       */
+/*   Updated: 2018/02/23 17:20:52 by ahrytsen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <minishell.h>
+#include <env.h>
 
 static void	ft_env_usage(char c)
 {
@@ -20,10 +21,26 @@ static void	ft_env_usage(char c)
 	exit(1);
 }
 
-static void	ft_env_print(const char **env)
+static void	ft_env_print(void)
 {
-	while (*env)
+	char **env;
+
+	env = msh_get_environ()->env;
+	while (env && *env)
 		ft_printf("%s\n", *env++);
+}
+
+static void	ft_clearenv(void)
+{
+	char **env;
+
+	env = msh_get_environ()->env;
+	while (env && *env)
+	{
+		free((void*)*env);
+		*env = NULL;
+		env++;
+	}
 }
 
 static int	ft_env_flags(char ***av, const char **env, t_env *options)
@@ -56,11 +73,11 @@ static int	ft_env_flags(char ***av, const char **env, t_env *options)
 	return (0);
 }
 
-int			ft_env(char **av, const char ***env)
+int			ft_env(char **av)
 {
 	char	*tmp;
 	int		st;
-	t_env	options;
+	t_op	options;
 
 	if (fork())
 	{
@@ -68,43 +85,19 @@ int			ft_env(char **av, const char ***env)
 		return (st);
 	}
 	ft_bzero(&options, sizeof(t_env));
-	while (*av && **av == '-')
-	{
-		if (ft_env_flags(&av, *env, &options))
-			break ;
+	while (*av && **av == '-' && !ft_env_flags(&av, *env, &options))
 		av++;
-	}
-	options.i ? ft_clearenv(*env) : 0;
+	options.i ? ft_clearenv() : 0;
 	options.i && options.v ? ft_printf("#env clearing environ\n") : 0;
 	while (*av && !options.exec && (tmp = ft_strchr(*av, '=')))
 	{
 		options.v ? ft_printf("#env setenv:\t%s\n", *av) : 0;
 		*tmp = 0;
-		ft_setenv(env, *av++, ++tmp, 1);
+		ft_setenv(*av++, ++tmp, 1);
 	}
 	!options.exec && *av ? options.exec = av : 0;
-	if (options.exec)
-		fork() ? wait(&st) : ft_exec(options.exec, env, options.altpath);
-	else
-		ft_env_print(*env);
+
+	options.exec ? ft_exec(options.exec, env, options.altpath)
+		: ft_env_print(*env);
 	exit(0);
-}
-
-char		**ft_cpyenv(const char **src_env)
-{
-	char	**new_env;
-	size_t	env_l;
-
-	env_l = 0;
-	while (src_env[env_l])
-		env_l++;
-	if (!(new_env = malloc(sizeof(char*) * (env_l + 1))))
-		return (NULL);
-	env_l = 0;
-	while (src_env[env_l])
-	{
-		new_env[env_l] = ft_strdup(src_env[env_l]);
-		env_l++;
-	}
-	return (new_env);
 }
