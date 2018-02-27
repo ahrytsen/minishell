@@ -6,7 +6,7 @@
 /*   By: ahrytsen <ahrytsen@student.unit.ua>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/12 15:02:36 by ahrytsen          #+#    #+#             */
-/*   Updated: 2018/02/23 16:24:46 by ahrytsen         ###   ########.fr       */
+/*   Updated: 2018/02/26 19:10:26 by ahrytsen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,8 +21,11 @@ int		ft_echo(char **av)
 	n = 1;
 	if (*av && !ft_strcmp(*av, "-n") && ++i)
 		n = 0;
-	while(av[i])
+	while (av[i])
+	{
 		ft_printf("%s", av[i++]);
+		av[i] ? ft_printf(" ") : 0;
+	}
 	n ? ft_printf("\n") : 0;
 	return (0);
 }
@@ -57,7 +60,7 @@ int		ft_cd(char **av)
 	if (*av && ft_strequ(*av, "-"))
 		ft_printf("%s\n", next_path);
 	return ((ft_setenv("OLDPWD", curent_path, 1) ||
-			 ft_setenv("PWD", getcwd(curent_path, MAXPATHLEN), 1)));
+			ft_setenv("PWD", getcwd(curent_path, MAXPATHLEN), 1)));
 }
 
 int		ft_unsetenv_builtin(char **av)

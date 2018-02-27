@@ -6,7 +6,7 @@
 /*   By: ahrytsen <ahrytsen@student.unit.ua>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/19 15:44:16 by ahrytsen          #+#    #+#             */
-/*   Updated: 2018/02/23 18:33:30 by ahrytsen         ###   ########.fr       */
+/*   Updated: 2018/02/26 15:37:57 by ahrytsen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,13 @@ static char	*ft_new_env_str(const char *name, const char *value)
 	return (new_env);
 }
 
+t_env		*msh_get_environ(void)
+{
+	static t_env	env = {NULL};
+
+	return (&env);
+}
+
 char		*ft_getenv(const char *name)
 {
 	char	**env;
@@ -48,12 +55,13 @@ char		*ft_getenv(const char *name)
 
 int			ft_setenv(const char *name, const char *value, int overwrite)
 {
-	size_t		i;
-	const char	**env;
-	char		*tmp;
+	size_t	i;
+	char	**env;
+	char	*tmp;
 
 	i = -1;
-	if (!(tmp = ft_new_env_str(name, value)) || !(env = msh_get_environ()->env))
+	if (!(tmp = ft_new_env_str(name, value))
+		|| !(env = msh_get_environ()->env))
 		return (-1);
 	while (env[++i])
 		if (ft_strcmp(env[i], name) == '=')
@@ -85,23 +93,4 @@ int			ft_unsetenv(const char *name)
 	while (*env++)
 		*(env - 1) = *env;
 	return (0);
-}
-
-char		**ft_dupstr_arr(const char **src_arr)
-{
-	char	**new_arr;
-	size_t	arr_l;
-
-	arr_l = 0;
-	while (src_arr[arr_l])
-		arr_l++;
-	if (!(new_arr = malloc(sizeof(char*) * (arr_l + 1))))
-		return (NULL);
-	arr_l = 0;
-	while (src_arr[arr_l])
-	{
-		new_arr[arr_l] = ft_strdup(src_arr[arr_l]);
-		arr_l++;
-	}
-	return (new_arr);
 }

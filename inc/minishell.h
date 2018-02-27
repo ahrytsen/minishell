@@ -6,7 +6,7 @@
 /*   By: ahrytsen <ahrytsen@student.unit.ua>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/02 17:32:57 by ahrytsen          #+#    #+#             */
-/*   Updated: 2018/02/23 18:33:11 by ahrytsen         ###   ########.fr       */
+/*   Updated: 2018/02/27 15:17:29 by ahrytsen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,14 @@
 # include <term.h>
 # include <fcntl.h>
 # include <termios.h>
+
+typedef struct	s_op
+{
+	int		v;
+	int		i;
+	char	*altpath;
+	char	**exec;
+}				t_op;
 
 typedef struct	s_env
 {
@@ -46,8 +54,8 @@ int				ft_exit(char **av);
 /*
 **
 */
-void			ft_exec(char **cmd, const char ***env, char *altpath);
-char			**ft_dupstr_arr(const char **src_arr);
+int				ft_exec(char **cmd, char *altpath);
+t_env			*msh_get_environ(void);
 char			*ft_getenv(const char *name);
 int				ft_setenv(const char *name, const char *value, int overwrite);
 int				ft_unsetenv(const char *name);

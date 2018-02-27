@@ -1,17 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   env.c                                              :+:      :+:    :+:   */
+/*   env_builtin.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ahrytsen <ahrytsen@student.unit.ua>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2018/02/16 17:09:28 by ahrytsen          #+#    #+#             */
-/*   Updated: 2018/02/23 17:20:52 by ahrytsen         ###   ########.fr       */
+/*   Created: 2018/02/26 14:27:36 by ahrytsen          #+#    #+#             */
+/*   Updated: 2018/02/27 15:43:45 by ahrytsen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <minishell.h>
-#include <env.h>
 
 static void	ft_env_usage(char c)
 {
@@ -43,7 +42,7 @@ static void	ft_clearenv(void)
 	}
 }
 
-static int	ft_env_flags(char ***av, const char **env, t_env *options)
+static int	ft_env_flags(char ***av, t_op *options)
 {
 	char	*str;
 	char	*tmp;
@@ -57,11 +56,8 @@ static int	ft_env_flags(char ***av, const char **env, t_env *options)
 				? ft_printf("#env verbosity now at %d\n", options->v) : 0;
 		else if (*str == 'u' || *str == 'S' || *str == 'P')
 		{
-			if (!*(str + 1))
-				tmp = *(++*av);
-			else
-				tmp = str + 1;
-			*str == 'u' ? ft_unsetenv(env, tmp) : 0;
+			tmp = (!*(str + 1)) ? *(++*av) : (str + 1);
+			*str == 'u' ? ft_unsetenv(tmp) : 0;
 			*str == 'u' && options->v
 				? ft_printf("#env unset:\t%s\n", tmp) : 0;
 			*str == 'P' ? options->altpath = tmp : 0;
@@ -80,12 +76,9 @@ int			ft_env(char **av)
 	t_op	options;
 
 	if (fork())
-	{
-		wait(&st);
-		return (st);
-	}
-	ft_bzero(&options, sizeof(t_env));
-	while (*av && **av == '-' && !ft_env_flags(&av, *env, &options))
+		return ((wait(&st) != -1) ? st : 1);
+	ft_bzero(&options, sizeof(t_op));
+	while (*av && **av == '-' && !ft_env_flags(&av, &options))
 		av++;
 	options.i ? ft_clearenv() : 0;
 	options.i && options.v ? ft_printf("#env clearing environ\n") : 0;
@@ -95,9 +88,12 @@ int			ft_env(char **av)
 		*tmp = 0;
 		ft_setenv(*av++, ++tmp, 1);
 	}
-	!options.exec && *av ? options.exec = av : 0;
-
-	options.exec ? ft_exec(options.exec, env, options.altpath)
-		: ft_env_print(*env);
+	!options.exec && *av ? options.exec = ft_strdup_arr(av) : 0;
+	if (options.v && options.exec && (st = -1))
+		ft_printf("#env executing: %s\n", options.exec[0]);
+	while (options.v && options.exec && options.exec[(++st)])
+		ft_printf("#env\targ[%d]= '%s'\n", st, options.exec[st]);
+	options.exec ? ft_exec(options.exec, options.altpath)
+		: ft_env_print();
 	exit(0);
 }
