@@ -6,7 +6,7 @@
 /*   By: ahrytsen <ahrytsen@student.unit.ua>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/26 14:27:36 by ahrytsen          #+#    #+#             */
-/*   Updated: 2018/02/27 15:43:45 by ahrytsen         ###   ########.fr       */
+/*   Updated: 2018/02/27 18:14:40 by ahrytsen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,8 @@
 
 static void	ft_env_usage(char c)
 {
-	ft_printf("env: illegal option -- %c\n"
+	ft_dprintf(2,
+			"env: illegal option -- %c\n"
 			"usage: env [-iv] [-P utilpath] [-S string] [-u name]\n"
 			"           [name=value ...] [utility [argument ...]]\n", c);
 	exit(1);
@@ -61,7 +62,9 @@ static int	ft_env_flags(char ***av, t_op *options)
 			*str == 'u' && options->v
 				? ft_printf("#env unset:\t%s\n", tmp) : 0;
 			*str == 'P' ? options->altpath = tmp : 0;
-			*str == 'S' ? options->exec = *av : 0;
+			*str == 'S' ? options->exec = ft_strdup_arr(*av) : 0;
+			*str == 'S' ? free(options->exec[0]) : 0;
+			*str == 'S' ? options->exec[0] = ft_strdup(tmp) : 0;
 			return (*str == 'S' ? 1 : 0);
 		}
 		else

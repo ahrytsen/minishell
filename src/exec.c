@@ -6,32 +6,29 @@
 /*   By: ahrytsen <ahrytsen@student.unit.ua>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/26 16:27:15 by ahrytsen          #+#    #+#             */
-/*   Updated: 2018/02/27 16:25:58 by ahrytsen         ###   ########.fr       */
+/*   Updated: 2018/02/27 18:34:14 by ahrytsen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <minishell.h>
 
-const static t_builtins	g_builtins[] =
-{
-	{"echo", &ft_echo},
-	{"cd", &ft_cd},
-	{"setenv", &ft_setenv_builtin},
-	{"unsetenv", &ft_unsetenv_builtin},
-	{"env", &ft_env},
-	{"exit", &ft_exit},
-	{NULL, NULL}
-};
-
 static int	ft_exec_builtin(char **cmd)
 {
-	int	i;
+	int						i;
+	const static t_builtins	builtins[] = {
+		{"echo", &ft_echo},
+		{"cd", &ft_cd},
+		{"setenv", &ft_setenv_builtin},
+		{"unsetenv", &ft_unsetenv_builtin},
+		{"env", &ft_env},
+		{"exit", &ft_exit},
+		{NULL, NULL}
+	};
 
 	i = 0;
-	while(g_builtins[i].cmd && ft_strcmp(cmd[0], g_builtins[i].cmd))
+	while (builtins[i].cmd && ft_strcmp(cmd[0], builtins[i].cmd))
 		i++;
-	return (g_builtins[i].cmd ? g_builtins[i].ft_builtin(cmd + 1)
-			: -1);
+	return (builtins[i].cmd ? builtins[i].ft_builtin(cmd + 1) : -1);
 }
 
 static int	ft_exec_bypath(char **cmd, char *path)
@@ -67,7 +64,7 @@ static char	*ft_search_bin(char *bin_name, const char *altpath)
 		ft_strcat(exec_path, "/");
 		ft_strcat(exec_path, bin_name);
 		if (!access(exec_path, X_OK))
-			break;
+			break ;
 		ft_memdel((void**)&exec_path);
 		free(path[i++]);
 	}
