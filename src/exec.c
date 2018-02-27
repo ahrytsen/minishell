@@ -6,7 +6,7 @@
 /*   By: ahrytsen <ahrytsen@student.unit.ua>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/26 16:27:15 by ahrytsen          #+#    #+#             */
-/*   Updated: 2018/02/27 18:34:14 by ahrytsen         ###   ########.fr       */
+/*   Updated: 2018/02/27 21:44:27 by ahrytsen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,12 @@ static int	ft_exec_bypath(char **cmd, char *path)
 
 	st = 0;
 	if (path && (access(path, X_OK) == 0))
-		fork() ? wait(&st) : execve(path, cmd, msh_get_environ()->env);
+	{
+		if (fork())
+			wait(&st);
+		else if ((st = execve(path, cmd, msh_get_environ()->env)))
+			dup2(open(path, O_RDONLY), 0);
+	}
 	else
 	{
 		st = 127;
