@@ -6,7 +6,7 @@
 /*   By: ahrytsen <ahrytsen@student.unit.ua>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/02 17:32:57 by ahrytsen          #+#    #+#             */
-/*   Updated: 2018/02/27 15:17:29 by ahrytsen         ###   ########.fr       */
+/*   Updated: 2018/02/28 21:34:39 by ahrytsen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,13 @@ typedef struct	s_builtins
 	int		(*ft_builtin)();
 }				t_builtins;
 
+typedef struct	s_buf
+{
+	size_t			id;
+	size_t			len;
+	char			str[BUFF_SIZE];
+	struct s_buf	*next;
+}				t_buf;
 /*
 **				Builtins
 */
@@ -59,5 +66,10 @@ t_env			*msh_get_environ(void);
 char			*ft_getenv(const char *name);
 int				ft_setenv(const char *name, const char *value, int overwrite);
 int				ft_unsetenv(const char *name);
+void			malloc_fail(void);
+
+void			ft_putstr_mshbuf(t_buf **buf, char *str, ssize_t len);
+void			ft_putchar_mshbuf(t_buf **buf, char c);
+char			*ft_buftostr(t_buf *buf_head);
 
 #endif

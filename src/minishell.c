@@ -6,7 +6,7 @@
 /*   By: ahrytsen <ahrytsen@student.unit.ua>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/02 11:02:52 by ahrytsen          #+#    #+#             */
-/*   Updated: 2018/02/27 21:45:01 by ahrytsen         ###   ########.fr       */
+/*   Updated: 2018/02/28 21:28:43 by ahrytsen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,9 @@ void	msh_init()
 	msh_get_environ()->env = ft_strdup_arr(environ);
 	tmp = ft_getenv("SHLVL");
 	shlvl = tmp ? ft_atoi(tmp) : 0;
-	ft_setenv("SHLVL", ft_itoa(shlvl + 1), 1);
+	tmp = ft_itoa(shlvl + 1);
+	ft_setenv("SHLVL", tmp, 1);
+	free(tmp);
 	signal(SIGINT, sig_handler);
 	signal(SIGWINCH, sig_handler);
 	signal(SIGINFO, sig_handler);
@@ -37,24 +39,20 @@ void	msh_init()
 	signal(SIGQUIT, SIG_IGN);
 }
 
-int		main(void)
+void		interact_mod(void)
 {
 	char	pwd[MAXPATHLEN];
 	int		st;
 	char	*cmds;
 	char	**cmd;
 	int		i;
-/*	struct termios tty;
 
-	tcgetattr (0, &tty);
-	tty.c_lflag &= ~(ECHOCTL);
-	tcsetattr (0, TCSASOFT, &tty);
-
-	env = ft_cpyenv(envp);*/
-	msh_init();
-	ft_printf("%s $> ", getcwd(pwd, MAXPATHLEN));
-	while (get_next_line(0, &cmds))
+	while (1)
 	{
+		ft_printf("%s $> ", getcwd(pwd, MAXPATHLEN));
+		i = get_next_line(0, &cmds);
+		if (!i || i == -1)
+			exit(!i ? st : 1);
 		i = 0;
 		cmd = ft_strsplit(cmds, ';');
 		while (cmd[i])
@@ -64,6 +62,13 @@ int		main(void)
 		}
 		free(cmd);
 		free(cmds);
-		st != -1 ?ft_printf("%s $> ", getcwd(pwd, MAXPATHLEN)) : 0;
 	}
+}
+/*
+**void		script_mod();
+*/
+int			main(void)
+{
+	msh_init();
+	interact_mod();
 }
