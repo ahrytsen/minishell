@@ -6,7 +6,7 @@
 /*   By: ahrytsen <ahrytsen@student.unit.ua>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/28 19:01:15 by ahrytsen          #+#    #+#             */
-/*   Updated: 2018/02/28 21:34:23 by ahrytsen         ###   ########.fr       */
+/*   Updated: 2018/03/02 20:53:10 by ahrytsen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ static size_t	ft_getbufsize(t_buf *buf)
 	size_t	ret;
 
 	ret = 0;
-	while(buf)
+	while (buf)
 	{
 		ret += buf->len;
 		buf = buf->next;
@@ -66,11 +66,11 @@ void			ft_putstr_mshbuf(t_buf **buf, char *str, ssize_t len)
 		return ;
 	if (len == -1)
 		while (*str)
-			ft_putchar_buf(buf, *str++);
+			ft_putchar_mshbuf(buf, *str++);
 	else
 		while (len && *buf)
 		{
-			ft_putchar_buf(buf, *str++);
+			ft_putchar_mshbuf(buf, *str++);
 			len--;
 		}
 }

@@ -6,21 +6,20 @@
 /*   By: ahrytsen <ahrytsen@student.unit.ua>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/02 11:02:52 by ahrytsen          #+#    #+#             */
-/*   Updated: 2018/02/28 21:28:43 by ahrytsen         ###   ########.fr       */
+/*   Updated: 2018/03/02 20:56:10 by ahrytsen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <minishell.h>
 
-
 void	sig_handler(int signo)
 {
-  if (signo == SIGINT)
-	  ft_printf("");
-  return ;
+	if (signo == SIGINT)
+		ft_printf("");
+	return ;
 }
 
-void	msh_init()
+void	msh_init(void)
 {
 	extern char	**environ;
 	int			shlvl;
@@ -39,7 +38,7 @@ void	msh_init()
 	signal(SIGQUIT, SIG_IGN);
 }
 
-void		interact_mod(void)
+void	interact_mod(void)
 {
 	char	pwd[MAXPATHLEN];
 	int		st;
@@ -49,10 +48,11 @@ void		interact_mod(void)
 
 	while (1)
 	{
-		ft_printf("%s $> ", getcwd(pwd, MAXPATHLEN));
+		isatty(0) ? ft_printf("%s $> ", getcwd(pwd, MAXPATHLEN)) : 0;
 		i = get_next_line(0, &cmds);
 		if (!i || i == -1)
 			exit(!i ? st : 1);
+		cmds = parse_line(cmds);
 		i = 0;
 		cmd = ft_strsplit(cmds, ';');
 		while (cmd[i])
@@ -64,10 +64,12 @@ void		interact_mod(void)
 		free(cmds);
 	}
 }
+
 /*
 **void		script_mod();
 */
-int			main(void)
+
+int		main(void)
 {
 	msh_init();
 	interact_mod();

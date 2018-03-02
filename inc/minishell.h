@@ -6,7 +6,7 @@
 /*   By: ahrytsen <ahrytsen@student.unit.ua>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/02 17:32:57 by ahrytsen          #+#    #+#             */
-/*   Updated: 2018/02/28 21:34:39 by ahrytsen         ###   ########.fr       */
+/*   Updated: 2018/03/02 20:58:24 by ahrytsen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,13 +53,13 @@ typedef struct	s_buf
 **				Builtins
 */
 int				ft_echo(char **av);
-int			 	ft_cd(char **av);
+int				ft_cd(char **av);
 int				ft_env(char **av);
 int				ft_setenv_builtin(char **av);
 int				ft_unsetenv_builtin(char **av);
 int				ft_exit(char **av);
 /*
-**
+**				msh
 */
 int				ft_exec(char **cmd, char *altpath);
 t_env			*msh_get_environ(void);
@@ -68,8 +68,10 @@ int				ft_setenv(const char *name, const char *value, int overwrite);
 int				ft_unsetenv(const char *name);
 void			malloc_fail(void);
 
+t_buf			*ft_new_mshbuf(void);
 void			ft_putstr_mshbuf(t_buf **buf, char *str, ssize_t len);
 void			ft_putchar_mshbuf(t_buf **buf, char c);
 char			*ft_buftostr(t_buf *buf_head);
+char			*parse_line(char *line);
 
 #endif

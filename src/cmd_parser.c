@@ -6,44 +6,49 @@
 /*   By: ahrytsen <ahrytsen@student.unit.ua>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/21 16:37:14 by ahrytsen          #+#    #+#             */
-/*   Updated: 2018/02/28 21:31:12 by ahrytsen         ###   ########.fr       */
+/*   Updated: 2018/03/02 21:01:34 by ahrytsen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <minishell.h>
 
-int	parse_line(char **line)
+static void	parse_dollar(t_buf **cur, char **line)
 {
-	char	*res;
+	char	*st;
+	char	*tmp;
+
+	st = *line;
+	if (!ft_isalnum(*st) && *st != '_')
+	{
+		ft_putchar_mshbuf(cur, '$');
+		return ;
+	}
+	while (ft_isalnum(**line) || **line == '_')
+		(*line)++;
+	tmp = ft_strsub(st, 0, *line - st);
+	ft_putstr_mshbuf(cur, ft_getenv(tmp), -1);
+	free(tmp);
+}
+
+char		*parse_line(char *line)
+{
+	char	*tmp;
 	t_buf	*head;
 	t_buf	*cur;
 
-	if (!(head = ft_memalloc(sizeof(t_buf))))
+	tmp = line;
+	if (!(head = ft_memalloc(sizeof(t_buf))) || !line)
 		malloc_fail();
-	while (**line)
+	cur = head;
+	while (*line)
 	{
-		if (**line == '$')
-			;
-		ft_putchar_buf(&head, **line);
+		if (*line == '$' && line++)
+			parse_dollar(&cur, &line);
+		else if (*line == '~' && line++)
+			ft_putstr_mshbuf(&cur, ft_getenv("HOME"), -1);
+		else
+			ft_putchar_mshbuf(&cur, *line++);
 	}
-	return (0);
+	free(tmp);
+	return (ft_buftostr(head));
 }
-
-/*int	quote_checker(char **line)
-{
-	t_quote	quote[3];
-
-	quote = {
-		{'\'', "quote", 0},
-
-	}
-	while (**line)
-	{
-		if (**line == '\'')
-			while (**line && )
-			{
-
-			}
-
-	}
-	}*/
