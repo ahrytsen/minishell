@@ -6,7 +6,7 @@
 /*   By: ahrytsen <ahrytsen@student.unit.ua>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/02 17:32:57 by ahrytsen          #+#    #+#             */
-/*   Updated: 2018/03/02 20:58:24 by ahrytsen         ###   ########.fr       */
+/*   Updated: 2018/03/05 19:49:18 by ahrytsen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,7 @@ typedef struct	s_op
 typedef struct	s_env
 {
 	char	**env;
+	int		st;
 }				t_env;
 
 typedef struct	s_builtins
@@ -63,6 +64,7 @@ int				ft_exit(char **av);
 */
 int				ft_exec(char **cmd, char *altpath);
 t_env			*msh_get_environ(void);
+void			ft_env_print(void);
 char			*ft_getenv(const char *name);
 int				ft_setenv(const char *name, const char *value, int overwrite);
 int				ft_unsetenv(const char *name);

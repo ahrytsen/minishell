@@ -6,7 +6,7 @@
 /*   By: ahrytsen <ahrytsen@student.unit.ua>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/26 16:27:15 by ahrytsen          #+#    #+#             */
-/*   Updated: 2018/03/02 20:51:00 by ahrytsen         ###   ########.fr       */
+/*   Updated: 2018/03/05 19:58:04 by ahrytsen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ static int	ft_exec_bypath(char **cmd, char *path)
 	int	st;
 
 	st = 0;
-	if (path && (access(path, X_OK) == 0))
+	if (path && !access(path, X_OK))
 	{
 		if (fork())
 			wait(&st);
@@ -45,10 +45,10 @@ static int	ft_exec_bypath(char **cmd, char *path)
 	}
 	else
 	{
-		st = 127;
 		ft_dprintf(2, "%s: command not found or permission denied\n", *cmd);
+		return (-1);
 	}
-	return (st);
+	return (WEXITSTATUS(st));
 }
 
 static char	*ft_search_bin(char *bin_name, const char *altpath)

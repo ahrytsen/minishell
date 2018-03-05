@@ -6,7 +6,7 @@
 /*   By: ahrytsen <ahrytsen@student.unit.ua>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/26 14:27:36 by ahrytsen          #+#    #+#             */
-/*   Updated: 2018/03/02 18:57:47 by ahrytsen         ###   ########.fr       */
+/*   Updated: 2018/03/05 19:56:52 by ahrytsen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ static void	ft_env_usage(char c)
 	exit(1);
 }
 
-static void	ft_env_print(void)
+void		ft_env_print(void)
 {
 	char **env;
 
@@ -79,7 +79,7 @@ int			ft_env(char **av)
 	t_op	options;
 
 	if (fork())
-		return ((wait(&st) != -1) ? st : 1);
+		return ((wait(&st) != -1) ? WEXITSTATUS(st) : 1);
 	ft_bzero(&options, sizeof(t_op));
 	while (*av && **av == '-' && !ft_env_flags(&av, &options))
 		av++;
@@ -96,7 +96,7 @@ int			ft_env(char **av)
 		ft_printf("#env executing: %s\n", options.exec[0]);
 	while (options.v && options.exec && options.exec[(++st)])
 		ft_printf("#env\targ[%d]= '%s'\n", st, options.exec[st]);
-	options.exec ? ft_exec(options.exec, options.altpath)
+	options.exec ? (st = ft_exec(options.exec, options.altpath))
 		: ft_env_print();
-	exit(0);
+	exit(st);
 }
