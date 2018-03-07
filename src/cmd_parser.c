@@ -6,7 +6,7 @@
 /*   By: ahrytsen <ahrytsen@student.unit.ua>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/21 16:37:14 by ahrytsen          #+#    #+#             */
-/*   Updated: 2018/03/07 21:28:09 by ahrytsen         ###   ########.fr       */
+/*   Updated: 2018/03/07 21:44:01 by ahrytsen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ static void	parse_dollar(t_buf **cur, char **line)
 	st = *line;
 	if (*st == '0' && (*line)++)
 	{
-		ft_putstr_mshbuf(cur, "msh");
+		ft_putstr_mshbuf(cur, "msh", -1);
 		return ;
 	}
 	else if (!ft_isalnum(*st) && *st != '_')
@@ -48,6 +48,7 @@ static void	ft_quote(t_buf **cur, char **line)
 		(*line)++;
 	}
 	ft_putstr_mshbuf(cur, st, *line - st);
+	(*line)++;
 }
 
 static void	ft_dquote(t_buf **cur, char **line)
@@ -66,6 +67,7 @@ static void	ft_dquote(t_buf **cur, char **line)
 			parse_dollar(cur, line);
 		else
 			ft_putchar_mshbuf(cur, *(*line)++);
+	(*line)++;
 }
 
 char		*parse_line(char *line)
@@ -88,8 +90,8 @@ char		*parse_line(char *line)
 			ft_quote(&cur, &line);
 		else if (*line == '"' && line++)
 			ft_dquote(&cur, &line);
-		else if (*line == '`' && line++)
-			ft_bquote(&cur, &line);
+	/*else if (*line == '`' && line++)
+	  ft_bquote(&cur, &line);*/
 		else
 			ft_putchar_mshbuf(&cur, *line++);
 	free(tmp);

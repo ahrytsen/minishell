@@ -6,7 +6,7 @@
 /*   By: ahrytsen <ahrytsen@student.unit.ua>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/28 19:01:15 by ahrytsen          #+#    #+#             */
-/*   Updated: 2018/03/07 14:22:06 by ahrytsen         ###   ########.fr       */
+/*   Updated: 2018/03/07 21:40:53 by ahrytsen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,7 +79,7 @@ void			*ft_free_mshbuf(t_buf *buf)
 {
 	t_buf	*tmp;
 
-	while (*buf)
+	while (buf)
 	{
 		tmp = buf->next;
 		free(buf);
