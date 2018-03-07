@@ -6,7 +6,7 @@
 /*   By: ahrytsen <ahrytsen@student.unit.ua>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/02 17:32:57 by ahrytsen          #+#    #+#             */
-/*   Updated: 2018/03/05 19:49:18 by ahrytsen         ###   ########.fr       */
+/*   Updated: 2018/03/07 14:38:28 by ahrytsen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,12 +68,19 @@ void			ft_env_print(void);
 char			*ft_getenv(const char *name);
 int				ft_setenv(const char *name, const char *value, int overwrite);
 int				ft_unsetenv(const char *name);
+char			*parse_line(char *line);
+/*
+**				error
+*/
 void			malloc_fail(void);
-
+void			quotes_error(char q);
+/*
+**				buffer
+*/
 t_buf			*ft_new_mshbuf(void);
 void			ft_putstr_mshbuf(t_buf **buf, char *str, ssize_t len);
 void			ft_putchar_mshbuf(t_buf **buf, char c);
 char			*ft_buftostr(t_buf *buf_head);
-char			*parse_line(char *line);
+void			*ft_free_mshbuf(t_buf *buf);
 
 #endif

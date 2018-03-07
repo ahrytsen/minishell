@@ -6,7 +6,7 @@
 /*   By: ahrytsen <ahrytsen@student.unit.ua>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/21 16:37:14 by ahrytsen          #+#    #+#             */
-/*   Updated: 2018/03/02 21:01:34 by ahrytsen         ###   ########.fr       */
+/*   Updated: 2018/03/07 21:28:09 by ahrytsen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,8 +17,14 @@ static void	parse_dollar(t_buf **cur, char **line)
 	char	*st;
 	char	*tmp;
 
+
 	st = *line;
-	if (!ft_isalnum(*st) && *st != '_')
+	if (*st == '0' && (*line)++)
+	{
+		ft_putstr_mshbuf(cur, "msh");
+		return ;
+	}
+	else if (!ft_isalnum(*st) && *st != '_')
 	{
 		ft_putchar_mshbuf(cur, '$');
 		return ;
@@ -30,6 +36,38 @@ static void	parse_dollar(t_buf **cur, char **line)
 	free(tmp);
 }
 
+static void	ft_quote(t_buf **cur, char **line)
+{
+	char	*st;
+
+	st = *line;
+	while (**line != '\'')
+	{
+		if (!**line)
+			quotes_error('\'');
+		(*line)++;
+	}
+	ft_putstr_mshbuf(cur, st, *line - st);
+}
+
+static void	ft_dquote(t_buf **cur, char **line)
+{
+	while (**line != '"')
+		if (!**line)
+			quotes_error('"');
+		else if (**line == '\\' && (*line)++)
+		{
+			if (**line == '"' || **line == '$')
+				ft_putchar_mshbuf(cur, *(*line)++);
+			else
+				ft_putchar_mshbuf(cur, '\\');
+		}
+		else if (**line == '$' && (*line)++)
+			parse_dollar(cur, line);
+		else
+			ft_putchar_mshbuf(cur, *(*line)++);
+}
+
 char		*parse_line(char *line)
 {
 	char	*tmp;
@@ -37,18 +75,23 @@ char		*parse_line(char *line)
 	t_buf	*cur;
 
 	tmp = line;
-	if (!(head = ft_memalloc(sizeof(t_buf))) || !line)
-		malloc_fail();
+	(!(head = ft_memalloc(sizeof(t_buf))) || !line) ? malloc_fail() : 0;
 	cur = head;
 	while (*line)
-	{
-		if (*line == '$' && line++)
+		if (*line == '\\' && line++)
+			ft_putchar_mshbuf(&cur, *line ? *line++ : *line);
+		else if (*line == '$' && line++)
 			parse_dollar(&cur, &line);
 		else if (*line == '~' && line++)
 			ft_putstr_mshbuf(&cur, ft_getenv("HOME"), -1);
+		else if (*line == '\'' && line++)
+			ft_quote(&cur, &line);
+		else if (*line == '"' && line++)
+			ft_dquote(&cur, &line);
+		else if (*line == '`' && line++)
+			ft_bquote(&cur, &line);
 		else
 			ft_putchar_mshbuf(&cur, *line++);
-	}
 	free(tmp);
 	return (ft_buftostr(head));
 }
