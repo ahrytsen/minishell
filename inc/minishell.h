@@ -6,7 +6,7 @@
 /*   By: ahrytsen <ahrytsen@student.unit.ua>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/02 17:32:57 by ahrytsen          #+#    #+#             */
-/*   Updated: 2018/03/08 12:27:41 by ahrytsen         ###   ########.fr       */
+/*   Updated: 2018/03/08 18:52:08 by ahrytsen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,6 +79,8 @@ char			*ft_getenv(const char *name);
 int				ft_setenv(const char *name, const char *value, int overwrite);
 int				ft_unsetenv(const char *name);
 char			*parse_line(char *line);
+char			**msh_splitsemicolon(char *line);
+char			**msh_splitwhitespaces(char *line);
 /*
 **				error
 */

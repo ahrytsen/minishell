@@ -6,7 +6,7 @@
 /*   By: ahrytsen <ahrytsen@student.unit.ua>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/02 11:02:52 by ahrytsen          #+#    #+#             */
-/*   Updated: 2018/03/08 14:06:16 by ahrytsen         ###   ########.fr       */
+/*   Updated: 2018/03/08 20:31:25 by ahrytsen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,16 +47,15 @@ void	interact_mod(void)
 
 	while (1)
 	{
-		ft_printf("%s $> ", getcwd(pwd, MAXPATHLEN));
+		isatty(1) ? ft_printf("%s $> ", getcwd(pwd, MAXPATHLEN)) : 0;
 		i = get_next_line(0, &cmds);
 		if (!i || i == -1)
 			exit(!i ? msh_get_environ()->st : 1);
-		cmds = parse_line(cmds);
 		i = 0;
-		cmd = ft_strsplit(cmds, ';');
-		while (cmd[i])
+		cmd = msh_splitsemicolon(cmds);
+		while (cmd && cmd[i])
 		{
-			msh_get_environ()->st = ft_exec(ft_strsplit(cmd[i], ' '), NULL);
+			msh_get_environ()->st = ft_exec(msh_splitwhitespaces(cmd[i]), NULL);
 			free(cmd[i++]);
 		}
 		free(cmd);
