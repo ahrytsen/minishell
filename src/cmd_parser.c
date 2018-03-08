@@ -6,7 +6,7 @@
 /*   By: ahrytsen <ahrytsen@student.unit.ua>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/21 16:37:14 by ahrytsen          #+#    #+#             */
-/*   Updated: 2018/03/07 21:44:01 by ahrytsen         ###   ########.fr       */
+/*   Updated: 2018/03/08 14:05:43 by ahrytsen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,58 @@ static void	ft_quote(t_buf **cur, char **line)
 	(*line)++;
 }
 
+void	string_mod(char *cmds)
+{
+	int		fd[2];
+	int		fd_tmp;
+
+	fd_tmp = dup(0);
+	pipe(fd);
+	dup2(fd[0], 0);
+	ft_dprintf(fd[1], cmds);
+	free(cmds);
+	close(fd[1]);
+	script_mod();
+	dup2(fd_tmp, 0);
+	exit(msh_get_environ()->st);
+}
+
+static void	ft_bquote(t_buf **cur, char **line)
+{
+	char	*st;
+	char	*buf;
+	int		fd[2];
+	int		fd_tmp;
+
+	st = *line;
+	while (**line != '`')
+		if (!*(*line)++)
+			quotes_error('`');
+	(*line)++;
+	if ((*line - st) == 1)
+		return ;
+	pipe(fd);
+	fd_tmp = dup(1);
+	if (fork())
+	{
+		close(fd[1]);
+		while ((get_next_line(fd[0], &buf)) > 0)
+		{
+			ft_putstr_mshbuf(cur, buf, -1);
+			ft_putchar_mshbuf(cur, ' ');
+			free(buf);
+		}
+	}
+	else
+	{
+		close(fd[0]);
+		dup2(fd[1], 1);
+		string_mod(ft_strsub(st, 0 , *line - st - 1));
+	}
+	dup2(fd_tmp, 1);
+	close(fd[0]);
+}
+
 static void	ft_dquote(t_buf **cur, char **line)
 {
 	while (**line != '"')
@@ -65,6 +117,8 @@ static void	ft_dquote(t_buf **cur, char **line)
 		}
 		else if (**line == '$' && (*line)++)
 			parse_dollar(cur, line);
+		else if (**line == '`' && (*line)++)
+			ft_bquote(cur, line);
 		else
 			ft_putchar_mshbuf(cur, *(*line)++);
 	(*line)++;
@@ -90,8 +144,8 @@ char		*parse_line(char *line)
 			ft_quote(&cur, &line);
 		else if (*line == '"' && line++)
 			ft_dquote(&cur, &line);
-	/*else if (*line == '`' && line++)
-	  ft_bquote(&cur, &line);*/
+		else if (*line == '`' && line++)
+			ft_bquote(&cur, &line);
 		else
 			ft_putchar_mshbuf(&cur, *line++);
 	free(tmp);

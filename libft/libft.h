@@ -6,7 +6,7 @@
 /*   By: ahrytsen <ahrytsen@student.unit.ua>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/10/28 05:35:20 by ahrytsen          #+#    #+#             */
-/*   Updated: 2018/03/05 21:36:36 by ahrytsen         ###   ########.fr       */
+/*   Updated: 2018/03/08 11:03:00 by ahrytsen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -132,6 +132,7 @@ char			*ft_dtoea(double nbr, int precision, int dot, char c);
 char			*ft_ldtoea(long double nbr, int precision, int dot, char c);
 void			ft_sort_params(char **av, int ac);
 char			**ft_strdup_arr(char **src_arr);
+int				ft_iswhitespace(int c);
 int				ft_isalpha_str(char *str);
 int				ft_isnumeric_str(char *str);
 int				ft_isalnum_str(char *str);

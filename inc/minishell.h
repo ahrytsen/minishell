@@ -6,7 +6,7 @@
 /*   By: ahrytsen <ahrytsen@student.unit.ua>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/02 17:32:57 by ahrytsen          #+#    #+#             */
-/*   Updated: 2018/03/07 14:38:28 by ahrytsen         ###   ########.fr       */
+/*   Updated: 2018/03/08 12:27:41 by ahrytsen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,14 @@ typedef struct	s_buf
 	char			str[BUFF_SIZE];
 	struct s_buf	*next;
 }				t_buf;
+typedef struct	s_cmd
+{
+	char			*av;
+	int				fd_in;
+	int				fd_out;
+	struct s_cmd	*next;
+	struct s_cmd	*prev;
+}				t_cmd;
 /*
 **				Builtins
 */
@@ -62,6 +70,8 @@ int				ft_exit(char **av);
 /*
 **				msh
 */
+void			script_mod(void);
+void			interact_mod(void);
 int				ft_exec(char **cmd, char *altpath);
 t_env			*msh_get_environ(void);
 void			ft_env_print(void);
@@ -74,6 +84,7 @@ char			*parse_line(char *line);
 */
 void			malloc_fail(void);
 void			quotes_error(char q);
+void			syntax_error(void);
 /*
 **				buffer
 */
