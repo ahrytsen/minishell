@@ -6,7 +6,7 @@
 /*   By: ahrytsen <ahrytsen@student.unit.ua>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/21 16:37:14 by ahrytsen          #+#    #+#             */
-/*   Updated: 2018/03/08 14:05:43 by ahrytsen         ###   ########.fr       */
+/*   Updated: 2018/03/08 21:52:04 by ahrytsen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,6 @@ static void	parse_dollar(t_buf **cur, char **line)
 {
 	char	*st;
 	char	*tmp;
-
 
 	st = *line;
 	if (*st == '0' && (*line)++)
@@ -70,37 +69,17 @@ void	string_mod(char *cmds)
 static void	ft_bquote(t_buf **cur, char **line)
 {
 	char	*st;
-	char	*buf;
-	int		fd[2];
-	int		fd_tmp;
 
 	st = *line;
 	while (**line != '`')
 		if (!*(*line)++)
 			quotes_error('`');
+	/*else if (**line == '\\' && (line++)
+	  ft_putchar_mshbuf(&cur, *line ? *line++ : *line);*/
 	(*line)++;
 	if ((*line - st) == 1)
 		return ;
-	pipe(fd);
-	fd_tmp = dup(1);
-	if (fork())
-	{
-		close(fd[1]);
-		while ((get_next_line(fd[0], &buf)) > 0)
-		{
-			ft_putstr_mshbuf(cur, buf, -1);
-			ft_putchar_mshbuf(cur, ' ');
-			free(buf);
-		}
-	}
-	else
-	{
-		close(fd[0]);
-		dup2(fd[1], 1);
-		string_mod(ft_strsub(st, 0 , *line - st - 1));
-	}
-	dup2(fd_tmp, 1);
-	close(fd[0]);
+	string_mod(ft_strsub(st, 0, *line - st - 1));
 }
 
 static void	ft_dquote(t_buf **cur, char **line)
@@ -134,8 +113,8 @@ char		*parse_line(char *line)
 	(!(head = ft_memalloc(sizeof(t_buf))) || !line) ? malloc_fail() : 0;
 	cur = head;
 	while (*line)
-		if (*line == '\\' && line++)
-			ft_putchar_mshbuf(&cur, *line ? *line++ : *line);
+		if (*line == '\\' && line++ && !((void*)ft_putchar_mshbuf(&cur, *line)))
+			*line ? (line++) : 0;
 		else if (*line == '$' && line++)
 			parse_dollar(&cur, &line);
 		else if (*line == '~' && line++)

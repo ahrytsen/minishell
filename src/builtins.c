@@ -6,7 +6,7 @@
 /*   By: ahrytsen <ahrytsen@student.unit.ua>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/12 15:02:36 by ahrytsen          #+#    #+#             */
-/*   Updated: 2018/03/05 21:42:37 by ahrytsen         ###   ########.fr       */
+/*   Updated: 2018/03/08 20:44:40 by ahrytsen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,7 +77,7 @@ int		ft_cd(char **av)
 	if (*av && ft_strequ(*av, "-"))
 		ft_printf("%s\n", next_path);
 	return ((ft_setenv("OLDPWD", curent_path, 1) ||
-			 ft_setenv("PWD", getcwd(curent_path, MAXPATHLEN), 1)));
+			ft_setenv("PWD", getcwd(curent_path, MAXPATHLEN), 1)));
 }
 
 int		ft_unsetenv_builtin(char **av)
