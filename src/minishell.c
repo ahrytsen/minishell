@@ -6,7 +6,7 @@
 /*   By: ahrytsen <ahrytsen@student.unit.ua>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/02 11:02:52 by ahrytsen          #+#    #+#             */
-/*   Updated: 2018/03/08 20:31:25 by ahrytsen         ###   ########.fr       */
+/*   Updated: 2018/03/12 15:55:49 by ahrytsen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ void	msh_init(void)
 	signal(SIGQUIT, SIG_IGN);
 }
 
-void	interact_mod(void)
+int		interact_mod(void)
 {
 	char	pwd[MAXPATHLEN];
 	char	*cmds;
@@ -50,7 +50,7 @@ void	interact_mod(void)
 		isatty(1) ? ft_printf("%s $> ", getcwd(pwd, MAXPATHLEN)) : 0;
 		i = get_next_line(0, &cmds);
 		if (!i || i == -1)
-			exit(!i ? msh_get_environ()->st : 1);
+			return (!i ? msh_get_environ()->st : 1);
 		i = 0;
 		cmd = msh_splitsemicolon(cmds);
 		while (cmd && cmd[i])
@@ -63,7 +63,7 @@ void	interact_mod(void)
 	}
 }
 
-void	script_mod(void)
+int		script_mod(void)
 {
 	char	*cmds;
 	char	**cmd;
@@ -73,7 +73,7 @@ void	script_mod(void)
 	{
 		i = get_next_line(0, &cmds);
 		if (!i || i == -1)
-			exit(!i ? msh_get_environ()->st : 1);
+			return (!i ? msh_get_environ()->st : 1);
 		cmds = parse_line(cmds);
 		i = 0;
 		cmd = ft_strsplit(cmds, ';');

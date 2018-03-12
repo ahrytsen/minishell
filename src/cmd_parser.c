@@ -6,7 +6,7 @@
 /*   By: ahrytsen <ahrytsen@student.unit.ua>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/21 16:37:14 by ahrytsen          #+#    #+#             */
-/*   Updated: 2018/03/08 21:52:04 by ahrytsen         ###   ########.fr       */
+/*   Updated: 2018/03/12 14:42:50 by ahrytsen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,36 +50,26 @@ static void	ft_quote(t_buf **cur, char **line)
 	(*line)++;
 }
 
-void	string_mod(char *cmds)
-{
-	int		fd[2];
-	int		fd_tmp;
-
-	fd_tmp = dup(0);
-	pipe(fd);
-	dup2(fd[0], 0);
-	ft_dprintf(fd[1], cmds);
-	free(cmds);
-	close(fd[1]);
-	script_mod();
-	dup2(fd_tmp, 0);
-	exit(msh_get_environ()->st);
-}
-
 static void	ft_bquote(t_buf **cur, char **line)
 {
-	char	*st;
+	t_buf	*head;
+	t_buf	*tmp;
+	char	*str;
 
-	st = *line;
+	(!(head = ft_memalloc(sizeof(t_buf))) || !line) ? malloc_fail() : 0;
+	tmp = head;
 	while (**line != '`')
-		if (!*(*line)++)
+		if (!**line)
 			quotes_error('`');
-	/*else if (**line == '\\' && (line++)
-	  ft_putchar_mshbuf(&cur, *line ? *line++ : *line);*/
+		else if (**line == '\\' && (*line)++)
+			ft_bquote_slash(&tmp, line);
+		else
+			ft_putchar_mshbuf(&tmp, *(*line)++);
+	str = ft_buftostr(head);
+	if (*str)
+		ft_bquote_helper(cur, str);
+	free(str);
 	(*line)++;
-	if ((*line - st) == 1)
-		return ;
-	string_mod(ft_strsub(st, 0, *line - st - 1));
 }
 
 static void	ft_dquote(t_buf **cur, char **line)
@@ -88,12 +78,7 @@ static void	ft_dquote(t_buf **cur, char **line)
 		if (!**line)
 			quotes_error('"');
 		else if (**line == '\\' && (*line)++)
-		{
-			if (**line == '"' || **line == '$')
-				ft_putchar_mshbuf(cur, *(*line)++);
-			else
-				ft_putchar_mshbuf(cur, '\\');
-		}
+			ft_dquote_slash(cur, line);
 		else if (**line == '$' && (*line)++)
 			parse_dollar(cur, line);
 		else if (**line == '`' && (*line)++)
@@ -113,8 +98,8 @@ char		*parse_line(char *line)
 	(!(head = ft_memalloc(sizeof(t_buf))) || !line) ? malloc_fail() : 0;
 	cur = head;
 	while (*line)
-		if (*line == '\\' && line++ && !((void*)ft_putchar_mshbuf(&cur, *line)))
-			*line ? (line++) : 0;
+		if (*line == '\\' && line++)
+			ft_slash(&cur, &line);
 		else if (*line == '$' && line++)
 			parse_dollar(&cur, &line);
 		else if (*line == '~' && line++)
