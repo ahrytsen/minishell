@@ -6,11 +6,17 @@
 /*   By: ahrytsen <ahrytsen@student.unit.ua>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/08 18:41:25 by ahrytsen          #+#    #+#             */
-/*   Updated: 2018/03/08 20:21:40 by ahrytsen         ###   ########.fr       */
+/*   Updated: 2018/03/12 19:52:25 by ahrytsen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <minishell.h>
+
+static void		ft_skip_slash(char **s)
+{
+	if (*++(*s))
+		(*s)++;
+}
 
 static void		ft_skip_qoutes(char **s)
 {
@@ -37,14 +43,12 @@ static size_t	ft_countcmd(char *s)
 	m = 0;
 	res = 0;
 	while (*s)
-		if (*s == '"' || *s == '\'' || *s == '`')
+		if (*s == '"' || *s == '\'' || *s == '`' || *s == '\\')
 		{
 			!m ? (res++) : 0;
 			m = 1;
-			ft_skip_qoutes(&s);
+			(*s == '\\') ? ft_skip_slash(&s) : ft_skip_qoutes(&s);
 		}
-		else if (*s == '\\' && s++)
-			*s ? (s++) : 0;
 		else if (!ft_iswhitespace(*s) && s++ && !m)
 		{
 			m = 1;
@@ -76,11 +80,9 @@ char			**msh_splitwhitespaces(char *line)
 		!(split = (char**)ft_memalloc((ft_countcmd(line) + 1) * sizeof(char*))))
 		return (NULL);
 	while (*line)
-		if ((*line == '"' || *line == '\'' || *line == '`')
-			&& (!m ? (int)(st = line) : 1) && (++m))
-			ft_skip_qoutes(&line);
-		else if (*line == '\\' && line++)
-			*line ? (line++) : 0;
+		if ((*line == '"' || *line == '\'' || *line == '`' || *line == '\\')
+			&& (!m ? (int)(st = line) : 1) && ++m)
+			*line == '\\' ? ft_skip_slash(&line) : ft_skip_qoutes(&line);
 		else if (!ft_iswhitespace(*line) && line++ && !m && (m = 1))
 			st = line - 1;
 		else if (ft_iswhitespace(*line) && line++ && m && !(m = 0))

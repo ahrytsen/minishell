@@ -6,7 +6,7 @@
 /*   By: ahrytsen <ahrytsen@student.unit.ua>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/21 16:37:14 by ahrytsen          #+#    #+#             */
-/*   Updated: 2018/03/12 14:42:50 by ahrytsen         ###   ########.fr       */
+/*   Updated: 2018/03/12 18:24:24 by ahrytsen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,7 +102,8 @@ char		*parse_line(char *line)
 			ft_slash(&cur, &line);
 		else if (*line == '$' && line++)
 			parse_dollar(&cur, &line);
-		else if (*line == '~' && line++)
+		else if (*line == '~' && line == tmp
+				&& (*(line + 1) == '/' || !*(line + 1)) && line++)
 			ft_putstr_mshbuf(&cur, ft_getenv("HOME"), -1);
 		else if (*line == '\'' && line++)
 			ft_quote(&cur, &line);
