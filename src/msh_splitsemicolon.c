@@ -6,7 +6,7 @@
 /*   By: ahrytsen <ahrytsen@student.unit.ua>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/08 18:39:06 by ahrytsen          #+#    #+#             */
-/*   Updated: 2018/03/12 20:06:44 by ahrytsen         ###   ########.fr       */
+/*   Updated: 2018/03/13 15:07:28 by ahrytsen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,8 +87,8 @@ char			**msh_splitsemicolon(char *line)
 				&& !ft_iswhitespace(*(line - 1)) && (m = 1))
 			st = line - 1;
 		else if (*line == ';' && line++ && m && !(m = 0))
-			if (!(split[i++] = ft_strsub(st, 0, line - st - 1)))
+			if (!(split[i++] = parse_line(ft_strsub(st, 0, line - st - 1))))
 				return (ft_freesplit(split, --i));
-	return ((m && !(split[i] = ft_strsub(st, 0, line - st)))
+	return ((m && !(split[i] = parse_line(ft_strsub(st, 0, line - st))))
 			? ft_freesplit(split, i) : split);
 }

@@ -6,7 +6,7 @@
 /*   By: ahrytsen <ahrytsen@student.unit.ua>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/07 20:08:03 by ahrytsen          #+#    #+#             */
-/*   Updated: 2018/03/12 20:03:29 by ahrytsen         ###   ########.fr       */
+/*   Updated: 2018/03/13 16:05:53 by ahrytsen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,7 +94,7 @@ void		ft_bquote_helper(t_buf **cur, char *str)
 		close(fd_put[1]);
 		while (get_next_line(fd_get[0], &line) == 1 && i++)
 		{
-			i > 2 ? ft_putchar_mshbuf(cur, ' ') : 0;
+			i > 2 ? ft_putchar_mshbuf(cur, '\n') : 0;
 			ft_putstr_mshbuf(cur, line, -1);
 			free(line);
 		}

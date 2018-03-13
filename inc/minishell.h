@@ -6,7 +6,7 @@
 /*   By: ahrytsen <ahrytsen@student.unit.ua>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/02 17:32:57 by ahrytsen          #+#    #+#             */
-/*   Updated: 2018/03/12 15:56:27 by ahrytsen         ###   ########.fr       */
+/*   Updated: 2018/03/13 15:27:02 by ahrytsen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,10 +78,12 @@ void			ft_env_print(void);
 char			*ft_getenv(const char *name);
 int				ft_setenv(const char *name, const char *value, int overwrite);
 int				ft_unsetenv(const char *name);
+char			*parse_argv(char *line);
 char			*parse_line(char *line);
 char			**msh_splitsemicolon(char *line);
 char			**msh_splitwhitespaces(char *line);
 void			ft_slash(t_buf **cur, char **line);
+void			ft_bquote(t_buf **cur, char **line);
 void			ft_bquote_slash(t_buf **cur, char **line);
 void			ft_dquote_slash(t_buf **cur, char **line);
 void			ft_bquote_helper(t_buf **cur, char *str);

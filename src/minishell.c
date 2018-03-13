@@ -6,7 +6,7 @@
 /*   By: ahrytsen <ahrytsen@student.unit.ua>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/02 11:02:52 by ahrytsen          #+#    #+#             */
-/*   Updated: 2018/03/12 18:06:09 by ahrytsen         ###   ########.fr       */
+/*   Updated: 2018/03/13 14:23:00 by ahrytsen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,12 +75,11 @@ int		script_mod(void)
 		i = get_next_line(0, &cmds);
 		if (!i || i == -1)
 			return (!i ? msh_get_environ()->st : 1);
-		cmds = parse_line(cmds);
 		i = 0;
-		cmd = ft_strsplit(cmds, ';');
+		cmd = msh_splitsemicolon(cmds);
 		while (cmd[i])
 		{
-			msh_get_environ()->st = ft_exec(ft_strsplit(cmd[i], ' '), NULL);
+			msh_get_environ()->st = ft_exec(msh_splitwhitespaces(cmd[i]), NULL);
 			free(cmd[i++]);
 		}
 		free(cmd);

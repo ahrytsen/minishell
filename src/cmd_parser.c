@@ -6,7 +6,7 @@
 /*   By: ahrytsen <ahrytsen@student.unit.ua>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/21 16:37:14 by ahrytsen          #+#    #+#             */
-/*   Updated: 2018/03/12 18:24:24 by ahrytsen         ###   ########.fr       */
+/*   Updated: 2018/03/13 15:56:59 by ahrytsen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ static void	ft_quote(t_buf **cur, char **line)
 	(*line)++;
 }
 
-static void	ft_bquote(t_buf **cur, char **line)
+void		ft_bquote(t_buf **cur, char **line)
 {
 	t_buf	*head;
 	t_buf	*tmp;
@@ -88,7 +88,7 @@ static void	ft_dquote(t_buf **cur, char **line)
 	(*line)++;
 }
 
-char		*parse_line(char *line)
+char		*parse_argv(char *line)
 {
 	char	*tmp;
 	t_buf	*head;
