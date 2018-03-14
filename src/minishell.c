@@ -6,7 +6,7 @@
 /*   By: ahrytsen <ahrytsen@student.unit.ua>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/02 11:02:52 by ahrytsen          #+#    #+#             */
-/*   Updated: 2018/03/13 14:23:00 by ahrytsen         ###   ########.fr       */
+/*   Updated: 2018/03/13 20:11:21 by ahrytsen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ void	msh_init(void)
 	signal(SIGQUIT, SIG_IGN);
 }
 
-int		interact_mod(void)
+int		main_loop(void)
 {
 	char	pwd[MAXPATHLEN];
 	char	*cmds;
@@ -47,7 +47,7 @@ int		interact_mod(void)
 
 	while (1)
 	{
-		isatty(1) ? ft_printf("\033[33m%s \033[32m$>\033[0m ",
+		isatty(0) ? ft_printf("\033[33m%s \033[32m$>\033[0m ",
 							getcwd(pwd, MAXPATHLEN)) : 0;
 		i = get_next_line(0, &cmds);
 		if (!i || i == -1)
@@ -64,32 +64,8 @@ int		interact_mod(void)
 	}
 }
 
-int		script_mod(void)
-{
-	char	*cmds;
-	char	**cmd;
-	int		i;
-
-	while (1)
-	{
-		i = get_next_line(0, &cmds);
-		if (!i || i == -1)
-			return (!i ? msh_get_environ()->st : 1);
-		i = 0;
-		cmd = msh_splitsemicolon(cmds);
-		while (cmd[i])
-		{
-			msh_get_environ()->st = ft_exec(msh_splitwhitespaces(cmd[i]), NULL);
-			free(cmd[i++]);
-		}
-		free(cmd);
-		free(cmds);
-	}
-}
-
 int		main(void)
 {
 	msh_init();
-	interact_mod();
-	return (msh_get_environ()->st);
+	return (main_loop());
 }

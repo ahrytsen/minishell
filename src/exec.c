@@ -6,7 +6,7 @@
 /*   By: ahrytsen <ahrytsen@student.unit.ua>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/26 16:27:15 by ahrytsen          #+#    #+#             */
-/*   Updated: 2018/03/12 20:01:55 by ahrytsen         ###   ########.fr       */
+/*   Updated: 2018/03/13 19:46:53 by ahrytsen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,16 +33,23 @@ static int	ft_exec_builtin(char **cmd)
 
 static int	ft_exec_bypath(char **cmd, char *path)
 {
-	int		st;
-	pid_t	pid;
+	int			st;
+	pid_t		pid;
+	struct stat	tmp;
 
 	st = 0;
 	if (path && !access(path, X_OK))
 	{
 		if ((pid = fork()))
-			wait4(pid, &st, 0, 0);
+			pid > 0 ? wait4(pid, &st, 0, 0) : 0;
 		else if ((st = execve(path, cmd, msh_get_environ()->env)))
-			dup2(open(path, O_RDONLY), 0);
+		{
+			if (stat(path, &tmp) || !S_ISREG(tmp.st_mode)
+				|| dup2(open(path, O_RDONLY), 0) == -1)
+				exit(ft_dprintf(2, "%s: permission denied\n", *cmd) ? -2 : 0);
+			else
+				return (0);
+		}
 	}
 	else
 	{

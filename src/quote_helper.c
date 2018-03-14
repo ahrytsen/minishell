@@ -6,7 +6,7 @@
 /*   By: ahrytsen <ahrytsen@student.unit.ua>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/07 20:08:03 by ahrytsen          #+#    #+#             */
-/*   Updated: 2018/03/13 16:05:53 by ahrytsen         ###   ########.fr       */
+/*   Updated: 2018/03/13 19:39:03 by ahrytsen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,7 @@ static void	ft_bquote_child(int fd_get[2], int fd_put[2])
 	close(fd_put[1]);
 	dup2(fd_put[0], 0);
 	dup2(fd_get[1], 1);
-	st = script_mod();
+	st = main_loop();
 	close(fd_get[1]);
 	close(fd_put[0]);
 	exit(st);

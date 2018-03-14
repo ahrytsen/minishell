@@ -6,7 +6,7 @@
 /*   By: ahrytsen <ahrytsen@student.unit.ua>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/02 17:32:57 by ahrytsen          #+#    #+#             */
-/*   Updated: 2018/03/13 15:27:02 by ahrytsen         ###   ########.fr       */
+/*   Updated: 2018/03/13 19:41:04 by ahrytsen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 # define MINISHELL_H
 
 # include <libft.h>
+# include <sys/stat.h>
 # include <sys/param.h>
 # include <sys/types.h>
 # include <sys/dir.h>
@@ -50,14 +51,16 @@ typedef struct	s_buf
 	char			str[BUFF_SIZE];
 	struct s_buf	*next;
 }				t_buf;
-typedef struct	s_cmd
-{
-	char			*av;
-	int				fd_in;
-	int				fd_out;
-	struct s_cmd	*next;
-	struct s_cmd	*prev;
-}				t_cmd;
+/*
+**typedef struct	s_cmd
+**{
+**	char			*av;
+**	int				fd_in;
+**	int				fd_out;
+**	struct s_cmd	*next;
+**	struct s_cmd	*prev;
+**}				t_cmd;
+*/
 /*
 **				Builtins
 */
@@ -70,8 +73,7 @@ int				ft_exit(char **av);
 /*
 **				msh
 */
-int				script_mod(void);
-int				interact_mod(void);
+int				main_loop(void);
 int				ft_exec(char **cmd, char *altpath);
 t_env			*msh_get_environ(void);
 void			ft_env_print(void);
