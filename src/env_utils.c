@@ -6,7 +6,7 @@
 /*   By: ahrytsen <ahrytsen@student.unit.ua>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/19 15:44:16 by ahrytsen          #+#    #+#             */
-/*   Updated: 2018/03/05 16:14:36 by ahrytsen         ###   ########.fr       */
+/*   Updated: 2018/03/16 20:53:54 by ahrytsen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ static char	*ft_new_env_str(const char *name, const char *value)
 
 t_env		*msh_get_environ(void)
 {
-	static t_env	env = {NULL, 0};
+	static t_env	env;
 
 	return (&env);
 }

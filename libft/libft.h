@@ -6,7 +6,7 @@
 /*   By: ahrytsen <ahrytsen@student.unit.ua>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/10/28 05:35:20 by ahrytsen          #+#    #+#             */
-/*   Updated: 2018/03/12 13:35:40 by ahrytsen         ###   ########.fr       */
+/*   Updated: 2018/03/16 18:59:42 by ahrytsen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -140,5 +140,6 @@ int				ft_isascii_str(char *str);
 int				ft_isprint_str(char *str);
 long			ft_atol_base(const char *str, int base);
 int				ft_atoi_base(const char *str, int base);
+void			ft_strarr_free(char **arr);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: ahrytsen <ahrytsen@student.unit.ua>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/02 17:32:57 by ahrytsen          #+#    #+#             */
-/*   Updated: 2018/03/13 19:41:04 by ahrytsen         ###   ########.fr       */
+/*   Updated: 2018/03/16 22:01:22 by ahrytsen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,10 +32,19 @@ typedef struct	s_op
 	char	**exec;
 }				t_op;
 
+typedef struct	s_cmdline
+{
+	char				ch;
+	struct s_cmdline	*next;
+	struct s_cmdline	*prev;
+}				t_cmdline;
+
 typedef struct	s_env
 {
-	char	**env;
-	int		st;
+	char		**env;
+	int			st;
+	t_cmdline	*cursor;
+	pid_t		pid;
 }				t_env;
 
 typedef struct	s_builtins
@@ -51,6 +60,7 @@ typedef struct	s_buf
 	char			str[BUFF_SIZE];
 	struct s_buf	*next;
 }				t_buf;
+
 /*
 **typedef struct	s_cmd
 **{
@@ -103,5 +113,14 @@ void			ft_putstr_mshbuf(t_buf **buf, char *str, ssize_t len);
 void			ft_putchar_mshbuf(t_buf **buf, char c);
 char			*ft_buftostr(t_buf *buf_head);
 void			*ft_free_mshbuf(t_buf *buf);
+/*
+**				cmdline
+*/
+char			*ft_readline(void);
+char			*cmdline_tostr(t_cmdline *cmdline, int mod);
+int				cmdline_bs(t_cmdline *cmdline);
+int				cmdline_add(t_cmdline *cmdline, uint64_t buf);
+int				cmdline_addch(t_cmdline *cmdline, char ch);
+void			cmdline_free(t_cmdline *cmdline);
 
 #endif

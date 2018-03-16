@@ -6,7 +6,7 @@
 /*   By: ahrytsen <ahrytsen@student.unit.ua>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/26 16:27:15 by ahrytsen          #+#    #+#             */
-/*   Updated: 2018/03/13 19:46:53 by ahrytsen         ###   ########.fr       */
+/*   Updated: 2018/03/16 20:52:55 by ahrytsen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,14 +34,16 @@ static int	ft_exec_builtin(char **cmd)
 static int	ft_exec_bypath(char **cmd, char *path)
 {
 	int			st;
-	pid_t		pid;
 	struct stat	tmp;
 
 	st = 0;
 	if (path && !access(path, X_OK))
 	{
-		if ((pid = fork()))
-			pid > 0 ? wait4(pid, &st, 0, 0) : 0;
+		if ((msh_get_environ()->pid = fork()))
+		{
+			wait4(msh_get_environ()->pid, &st, 0, 0);
+			msh_get_environ()->pid = 0;
+		}
 		else if ((st = execve(path, cmd, msh_get_environ()->env)))
 		{
 			if (stat(path, &tmp) || !S_ISREG(tmp.st_mode)
@@ -50,13 +52,10 @@ static int	ft_exec_bypath(char **cmd, char *path)
 			else
 				return (0);
 		}
+		return (WEXITSTATUS(st));
 	}
-	else
-	{
-		ft_dprintf(2, "%s: command not found or permission denied\n", *cmd);
-		return (-1);
-	}
-	return (WEXITSTATUS(st));
+	ft_dprintf(2, "%s: command not found or permission denied\n", *cmd);
+	return (-1);
 }
 
 static char	*ft_search_bin(char *bin_name, const char *altpath)

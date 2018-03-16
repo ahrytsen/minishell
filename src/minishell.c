@@ -6,16 +6,31 @@
 /*   By: ahrytsen <ahrytsen@student.unit.ua>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/02 11:02:52 by ahrytsen          #+#    #+#             */
-/*   Updated: 2018/03/13 20:11:21 by ahrytsen         ###   ########.fr       */
+/*   Updated: 2018/03/16 22:02:21 by ahrytsen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <minishell.h>
 
+void	ft_prompt(void)
+{
+	char	pwd[MAXPATHLEN];
+
+	isatty(0) ? ft_printf("\033[33m%s \033[32m$>\033[0m ",
+						getcwd(pwd, MAXPATHLEN)) : 0;
+}
+
 void	sig_handler(int signo)
 {
 	if (signo == SIGINT)
-		ft_printf("");
+	{
+		cmdline_free(msh_get_environ()->cursor);
+		if (isatty(0) && !msh_get_environ()->pid)
+		{
+			ft_printf("\n");
+			ft_prompt();
+		}
+	}
 	return ;
 }
 
@@ -26,31 +41,34 @@ void	msh_init(void)
 	char		*tmp;
 
 	msh_get_environ()->env = ft_strdup_arr(environ);
+	msh_get_environ()->cursor = ft_memalloc(sizeof(t_cmdline));
 	tmp = ft_getenv("SHLVL");
 	shlvl = tmp ? ft_atoi(tmp) : 0;
 	tmp = ft_itoa(shlvl + 1);
 	ft_setenv("SHLVL", tmp, 1);
 	free(tmp);
 	signal(SIGINT, sig_handler);
-	signal(SIGWINCH, sig_handler);
-	signal(SIGINFO, sig_handler);
+	signal(SIGWINCH, SIG_IGN);
+	signal(SIGINFO, SIG_IGN);
 	signal(SIGTSTP, SIG_IGN);
 	signal(SIGQUIT, SIG_IGN);
 }
 
 int		main_loop(void)
 {
-	char	pwd[MAXPATHLEN];
+
 	char	*cmds;
 	char	**cmd;
 	int		i;
 
 	while (1)
 	{
-		isatty(0) ? ft_printf("\033[33m%s \033[32m$>\033[0m ",
-							getcwd(pwd, MAXPATHLEN)) : 0;
-		i = get_next_line(0, &cmds);
-		if (!i || i == -1)
+		ft_prompt();
+		if (!isatty(0))
+			i = get_next_line(0, &cmds);
+		else
+			cmds = ft_readline();
+		if (!cmds)
 			return (!i ? msh_get_environ()->st : 1);
 		i = 0;
 		cmd = msh_splitsemicolon(cmds);
