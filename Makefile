@@ -6,7 +6,7 @@
 #    By: ahrytsen <ahrytsen@student.unit.ua>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2017/12/30 18:43:03 by ahrytsen          #+#    #+#              #
-#    Updated: 2018/03/17 15:14:47 by ahrytsen         ###   ########.fr        #
+#    Updated: 2018/03/17 18:17:17 by ahrytsen         ###   ########.fr        #
 #                                                                              #
 #******************************************************************************#
 
@@ -22,6 +22,7 @@ SRC			=	minishell.c builtins.c env_builtin.c env_utils.c exec.c error.c	\
 				msh_splitwhitespaces.c quote_helper.c line_parser.c cmdline.c	\
 				ft_readline.c
 HDR			=	inc/minishell.h
+LIBFT		=	libft/libftprintf.a
 OBJ			=	$(addprefix $(DIROBJ), $(SRC:.c=.o))
 
 ifdef FLAGS
@@ -39,13 +40,16 @@ CC			=	gcc
 RM			=	rm -rf
 ECHO		=	echo
 
+all		:		lib $(NAME)
 
-$(NAME)	:		$(OBJ)
-ifdef SUB_MAKE
-				@$(MAKE) -C $(SUB_MAKE) -j3
-endif
+$(NAME)	:		$(DIROBJ) $(OBJ) $(LIBFT)
 				@$(CC) $(INCLUDE) $(INC_LIB) $(CFLAGS) -O3 -o $(NAME) $(OBJ)
 				@$(ECHO) "\033[31m> \033[32mminishell: Compiled\033[0m"
+
+lib		:
+				@$(MAKE) -C $(SUB_MAKE) -j3
+
+$(LIBFT):		lib
 
 clean	:
 				@($(RM) $(DIROBJ))
@@ -54,7 +58,7 @@ ifdef SUB_MAKE
 endif
 				@$(ECHO) "\033[31m> \033[33mminishell: Directory cleaned\033[0m"
 
-all		:		$(NAME)
+
 
 fclean	:		clean
 ifdef SUB_MAKE
@@ -65,13 +69,10 @@ endif
 
 re		:		fclean all
 
-force	:
-				true
-
 .PHONY	:		all clean re
 
 $(DIROBJ):
 				@mkdir $(DIROBJ)
 
-$(OBJ)	:		$(DIROBJ)%.o : $(DIRSRC)%.c $(HDR) $(DIROBJ)
+$(OBJ)	:		$(DIROBJ)%.o : $(DIRSRC)%.c $(HDR)
 				@$(CC) $(INCLUDE) $(CFLAGS) -O3 -o $@ -c $<
