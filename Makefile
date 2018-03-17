@@ -6,7 +6,7 @@
 #    By: ahrytsen <ahrytsen@student.unit.ua>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2017/12/30 18:43:03 by ahrytsen          #+#    #+#              #
-#    Updated: 2018/03/16 14:33:24 by ahrytsen         ###   ########.fr        #
+#    Updated: 2018/03/17 15:14:47 by ahrytsen         ###   ########.fr        #
 #                                                                              #
 #******************************************************************************#
 
@@ -18,7 +18,7 @@ SUB_MAKE	=	./libft/
 SUB_OBJ		=	libftprintf.a
 INC_LIB		=	-L./libft -lftprintf -ltermcap
 SRC			=	minishell.c builtins.c env_builtin.c env_utils.c exec.c error.c	\
-				cmd_parser.c ft_buffer.c msh_splitsemicolon.c					\
+				cmd_parser.c ft_buffer.c msh_splitsemicolon.c ft_cd.c			\
 				msh_splitwhitespaces.c quote_helper.c line_parser.c cmdline.c	\
 				ft_readline.c
 HDR			=	inc/minishell.h

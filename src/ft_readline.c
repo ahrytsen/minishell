@@ -6,7 +6,7 @@
 /*   By: ahrytsen <ahrytsen@student.unit.ua>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/14 16:45:16 by ahrytsen          #+#    #+#             */
-/*   Updated: 2018/03/16 21:51:42 by ahrytsen         ###   ########.fr       */
+/*   Updated: 2018/03/17 14:20:28 by ahrytsen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -131,7 +131,7 @@ void		ft_autocomplit(t_cmdline *cursor)
 	free(line);
 }
 
-char		*ft_readline(void)
+int			ft_readline(char **line)
 {
 	struct termios	savetty;
 	struct termios	tty;
@@ -156,5 +156,6 @@ char		*ft_readline(void)
 				&& (buf > 31 || ft_iswhitespace(buf)))
 			cmdline_add(msh_get_environ()->cursor, buf);
 	tcsetattr(0, TCSANOW, &savetty);
-	return (cmdline_tostr(msh_get_environ()->cursor, 1));
+	*line = cmdline_tostr(msh_get_environ()->cursor, 1);
+	return (buf == '\n' ? 1 : 0);
 }

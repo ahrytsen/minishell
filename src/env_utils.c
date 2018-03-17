@@ -6,7 +6,7 @@
 /*   By: ahrytsen <ahrytsen@student.unit.ua>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/19 15:44:16 by ahrytsen          #+#    #+#             */
-/*   Updated: 2018/03/16 20:53:54 by ahrytsen         ###   ########.fr       */
+/*   Updated: 2018/03/17 16:05:42 by ahrytsen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,10 @@ int			ft_setenv(const char *name, const char *value, int overwrite)
 		if (ft_strcmp(env[i], name) == '=')
 		{
 			if (!overwrite)
+			{
+				free(tmp);
 				return (-1);
+			}
 			free((void*)env[i]);
 			return ((env[i] = tmp) ? 0 : -1);
 		}

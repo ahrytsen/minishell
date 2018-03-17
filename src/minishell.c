@@ -6,7 +6,7 @@
 /*   By: ahrytsen <ahrytsen@student.unit.ua>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/02 11:02:52 by ahrytsen          #+#    #+#             */
-/*   Updated: 2018/03/16 22:02:21 by ahrytsen         ###   ########.fr       */
+/*   Updated: 2018/03/17 15:12:04 by ahrytsen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,10 +25,10 @@ void	sig_handler(int signo)
 	if (signo == SIGINT)
 	{
 		cmdline_free(msh_get_environ()->cursor);
-		if (isatty(0) && !msh_get_environ()->pid)
+		if (isatty(0))
 		{
 			ft_printf("\n");
-			ft_prompt();
+			!msh_get_environ()->pid ? ft_prompt() : 0;
 		}
 	}
 	return ;
@@ -47,6 +47,7 @@ void	msh_init(void)
 	tmp = ft_itoa(shlvl + 1);
 	ft_setenv("SHLVL", tmp, 1);
 	free(tmp);
+	ft_setenv("PATH", "/usr/bin:/bin", 0);
 	signal(SIGINT, sig_handler);
 	signal(SIGWINCH, SIG_IGN);
 	signal(SIGINFO, SIG_IGN);
@@ -56,7 +57,6 @@ void	msh_init(void)
 
 int		main_loop(void)
 {
-
 	char	*cmds;
 	char	**cmd;
 	int		i;
@@ -64,11 +64,8 @@ int		main_loop(void)
 	while (1)
 	{
 		ft_prompt();
-		if (!isatty(0))
-			i = get_next_line(0, &cmds);
-		else
-			cmds = ft_readline();
-		if (!cmds)
+		i = !isatty(0) ? get_next_line(0, &cmds) : ft_readline(&cmds);
+		if (!i || i == -1)
 			return (!i ? msh_get_environ()->st : 1);
 		i = 0;
 		cmd = msh_splitsemicolon(cmds);

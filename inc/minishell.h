@@ -6,7 +6,7 @@
 /*   By: ahrytsen <ahrytsen@student.unit.ua>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/02 17:32:57 by ahrytsen          #+#    #+#             */
-/*   Updated: 2018/03/16 22:01:22 by ahrytsen         ###   ########.fr       */
+/*   Updated: 2018/03/17 14:18:43 by ahrytsen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,7 +116,7 @@ void			*ft_free_mshbuf(t_buf *buf);
 /*
 **				cmdline
 */
-char			*ft_readline(void);
+int				ft_readline(char **line);
 char			*cmdline_tostr(t_cmdline *cmdline, int mod);
 int				cmdline_bs(t_cmdline *cmdline);
 int				cmdline_add(t_cmdline *cmdline, uint64_t buf);

@@ -6,7 +6,7 @@
 /*   By: ahrytsen <ahrytsen@student.unit.ua>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/12 15:02:36 by ahrytsen          #+#    #+#             */
-/*   Updated: 2018/03/08 20:44:40 by ahrytsen         ###   ########.fr       */
+/*   Updated: 2018/03/17 15:14:17 by ahrytsen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,33 +51,6 @@ int		ft_exit(char **av)
 		return (1);
 	}
 	exit((av && *av) ? ft_atoi(*av) : msh_get_environ()->st);
-}
-
-int		ft_cd(char **av)
-{
-	char	*tmp;
-	char	*next_path;
-	char	curent_path[MAXPATHLEN];
-
-	tmp = NULL;
-	next_path = NULL;
-	getcwd(curent_path, MAXPATHLEN);
-	if (*av && ft_strequ(*av, "-"))
-		tmp = "OLDPWD";
-	else if ((*av && ft_strequ(*av, "--")) || !*av)
-		tmp = "HOME";
-	else
-		next_path = *av;
-	(!next_path && tmp) ? next_path = ft_getenv(tmp) : 0;
-	(!next_path) ? ft_dprintf(2, "cd: %s not set\n", tmp) : 0;
-	if (!next_path)
-		return (1);
-	if (chdir(next_path) == -1)
-		return (ft_dprintf(2, "cd: some error\n") ? 1 : 0);
-	if (*av && ft_strequ(*av, "-"))
-		ft_printf("%s\n", next_path);
-	return ((ft_setenv("OLDPWD", curent_path, 1) ||
-			ft_setenv("PWD", getcwd(curent_path, MAXPATHLEN), 1)));
 }
 
 int		ft_unsetenv_builtin(char **av)

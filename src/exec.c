@@ -6,7 +6,7 @@
 /*   By: ahrytsen <ahrytsen@student.unit.ua>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/26 16:27:15 by ahrytsen          #+#    #+#             */
-/*   Updated: 2018/03/16 20:52:55 by ahrytsen         ###   ########.fr       */
+/*   Updated: 2018/03/17 14:46:03 by ahrytsen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,6 +58,19 @@ static int	ft_exec_bypath(char **cmd, char *path)
 	return (-1);
 }
 
+static char	**ft_get_path(const char *altpath)
+{
+	char	pwd[MAXPATHLEN];
+
+	if (!altpath)
+	{
+		altpath = ft_getenv("PATH");
+		if (!altpath || !*altpath)
+			altpath = getcwd(pwd, MAXPATHLEN);
+	}
+	return (ft_strsplit(altpath, ':'));
+}
+
 static char	*ft_search_bin(char *bin_name, const char *altpath)
 {
 	int				i;
@@ -66,7 +79,7 @@ static char	*ft_search_bin(char *bin_name, const char *altpath)
 
 	i = 0;
 	exec_path = NULL;
-	if (!(path = ft_strsplit(altpath ? altpath : ft_getenv("PATH"), ':')))
+	if (!(path = ft_get_path(altpath)))
 		return (NULL);
 	while (path[i])
 	{
