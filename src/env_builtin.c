@@ -6,7 +6,7 @@
 /*   By: ahrytsen <ahrytsen@student.unit.ua>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/26 14:27:36 by ahrytsen          #+#    #+#             */
-/*   Updated: 2018/03/05 19:56:52 by ahrytsen         ###   ########.fr       */
+/*   Updated: 2018/03/18 18:04:48 by ahrytsen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,11 +36,8 @@ static void	ft_clearenv(void)
 
 	env = msh_get_environ()->env;
 	while (env && *env)
-	{
-		free((void*)*env);
-		*env = NULL;
-		env++;
-	}
+		ft_memdel((void*)env++);
+	ft_memdel((void*)&msh_get_environ()->env);
 }
 
 static int	ft_env_flags(char ***av, t_op *options)
