@@ -6,7 +6,7 @@
 /*   By: ahrytsen <ahrytsen@student.unit.ua>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/19 15:44:16 by ahrytsen          #+#    #+#             */
-/*   Updated: 2018/03/17 16:05:42 by ahrytsen         ###   ########.fr       */
+/*   Updated: 2018/03/18 16:29:39 by ahrytsen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,6 +94,9 @@ int			ft_unsetenv(const char *name)
 	if (!*env)
 		return (-1);
 	while (*env++)
+	{
+		free(*(env - 1));
 		*(env - 1) = *env;
+	}
 	return (0);
 }
