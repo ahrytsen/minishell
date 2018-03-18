@@ -6,7 +6,7 @@
 /*   By: ahrytsen <ahrytsen@student.unit.ua>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/26 16:27:15 by ahrytsen          #+#    #+#             */
-/*   Updated: 2018/03/17 14:46:03 by ahrytsen         ###   ########.fr       */
+/*   Updated: 2018/03/18 20:57:03 by ahrytsen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ static int	ft_exec_bypath(char **cmd, char *path)
 	st = 0;
 	if (path && !access(path, X_OK))
 	{
-		if ((msh_get_environ()->pid = fork()))
+		if (!msh_get_environ()->pid && (msh_get_environ()->pid = fork()))
 		{
 			wait4(msh_get_environ()->pid, &st, 0, 0);
 			msh_get_environ()->pid = 0;
@@ -50,7 +50,7 @@ static int	ft_exec_bypath(char **cmd, char *path)
 				|| dup2(open(path, O_RDONLY), 0) == -1)
 				exit(ft_dprintf(2, "%s: permission denied\n", *cmd) ? -2 : 0);
 			else
-				return (0);
+				main_loop();
 		}
 		return (WEXITSTATUS(st));
 	}

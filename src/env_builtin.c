@@ -6,7 +6,7 @@
 /*   By: ahrytsen <ahrytsen@student.unit.ua>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/26 14:27:36 by ahrytsen          #+#    #+#             */
-/*   Updated: 2018/03/18 18:04:48 by ahrytsen         ###   ########.fr       */
+/*   Updated: 2018/03/18 21:38:20 by ahrytsen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,6 @@ static void	ft_clearenv(void)
 	env = msh_get_environ()->env;
 	while (env && *env)
 		ft_memdel((void*)env++);
-	ft_memdel((void*)&msh_get_environ()->env);
 }
 
 static int	ft_env_flags(char ***av, t_op *options)
@@ -46,6 +45,7 @@ static int	ft_env_flags(char ***av, t_op *options)
 	char	*tmp;
 
 	str = **av;
+	options->altpath = ft_getenv("PATH");
 	while (*++str)
 		if (*str == 'i')
 			options->i = 1;
@@ -56,8 +56,7 @@ static int	ft_env_flags(char ***av, t_op *options)
 		{
 			tmp = (!*(str + 1)) ? *(++*av) : (str + 1);
 			*str == 'u' ? ft_unsetenv(tmp) : 0;
-			*str == 'u' && options->v
-				? ft_printf("#env unset:\t%s\n", tmp) : 0;
+			*str == 'u' && options->v ? ft_printf("#env unset:\t%s\n", tmp) : 0;
 			*str == 'P' ? options->altpath = tmp : 0;
 			*str == 'S' ? options->exec = ft_strdup_arr(*av) : 0;
 			*str == 'S' ? free(options->exec[0]) : 0;
@@ -75,8 +74,9 @@ int			ft_env(char **av)
 	int		st;
 	t_op	options;
 
-	if (fork())
-		return ((wait(&st) != -1) ? WEXITSTATUS(st) : 1);
+	if ((msh_get_environ()->pid = fork()))
+		return ((wait4(msh_get_environ()->pid, &st, 0, 0) != -1
+					&& !(msh_get_environ()->pid = 0)) ? WEXITSTATUS(st) : 1);
 	ft_bzero(&options, sizeof(t_op));
 	while (*av && **av == '-' && !ft_env_flags(&av, &options))
 		av++;
@@ -93,7 +93,7 @@ int			ft_env(char **av)
 		ft_printf("#env executing: %s\n", options.exec[0]);
 	while (options.v && options.exec && options.exec[(++st)])
 		ft_printf("#env\targ[%d]= '%s'\n", st, options.exec[st]);
-	options.exec ? (st = ft_exec(options.exec, options.altpath))
-		: ft_env_print();
+	(options.exec && (msh_get_environ()->pid = 1))
+		? (st = ft_exec(options.exec, options.altpath)) : ft_env_print();
 	exit(st);
 }
