@@ -6,7 +6,7 @@
 /*   By: ahrytsen <ahrytsen@student.unit.ua>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/26 16:27:15 by ahrytsen          #+#    #+#             */
-/*   Updated: 2018/03/18 20:57:03 by ahrytsen         ###   ########.fr       */
+/*   Updated: 2018/03/22 19:38:12 by ahrytsen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,10 +40,7 @@ static int	ft_exec_bypath(char **cmd, char *path)
 	if (path && !access(path, X_OK))
 	{
 		if (!msh_get_environ()->pid && (msh_get_environ()->pid = fork()))
-		{
 			wait4(msh_get_environ()->pid, &st, 0, 0);
-			msh_get_environ()->pid = 0;
-		}
 		else if ((st = execve(path, cmd, msh_get_environ()->env)))
 		{
 			if (stat(path, &tmp) || !S_ISREG(tmp.st_mode)
@@ -106,8 +103,11 @@ int			ft_exec(char **cmd, char *altpath)
 	int		i;
 
 	bin_path = NULL;
-	if (!cmd)
-		return (-1);
+	if (!cmd || !*cmd)
+	{
+		free(cmd);
+		return (!cmd ? -1 : 0);
+	}
 	if (ft_strchr(*cmd, '/'))
 		st = ft_exec_bypath(cmd, *cmd);
 	else if ((st = ft_exec_builtin(cmd)) == -1)
@@ -115,6 +115,7 @@ int			ft_exec(char **cmd, char *altpath)
 		bin_path = ft_search_bin(*cmd, altpath);
 		st = ft_exec_bypath(cmd, bin_path);
 	}
+	msh_get_environ()->pid = 0;
 	i = 0;
 	while (cmd[i])
 		free(cmd[i++]);

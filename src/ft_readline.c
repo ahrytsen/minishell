@@ -6,7 +6,7 @@
 /*   By: ahrytsen <ahrytsen@student.unit.ua>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/14 16:45:16 by ahrytsen          #+#    #+#             */
-/*   Updated: 2018/03/17 14:20:28 by ahrytsen         ###   ########.fr       */
+/*   Updated: 2018/03/22 20:14:22 by ahrytsen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -143,16 +143,16 @@ int			ft_readline(char **line)
 	tty.c_cc[VMIN] = 1;
 	tcsetattr(0, TCSAFLUSH, &tty);
 	while (!(buf = 0) && read(0, &buf, 8) > 0 && buf != 4)
-		if (buf == '\n' && ft_printf("\n"))
+		if (buf == '\n' && ft_dprintf(0, "\n"))
 			break ;
 		else if (buf == '\t')
 			ft_autocomplit(msh_get_environ()->cursor);
 		else if (buf == 127 && !cmdline_bs(msh_get_environ()->cursor))
-			ft_printf("%c\033[0J", 8);
+			ft_dprintf(0, "%c\033[0J", 8);
 		else if (buf == 0X445B1B || buf == 0X435B1B
 				|| buf == 0X415B1B || buf == 0X425B1B)
-			ft_printf("\a");
-		else if (buf != 127 && ft_printf("%s", &buf)
+			ft_dprintf(0, "\a");
+		else if (buf != 127 && ft_dprintf(0, "%s", &buf)
 				&& (buf > 31 || ft_iswhitespace(buf)))
 			cmdline_add(msh_get_environ()->cursor, buf);
 	tcsetattr(0, TCSANOW, &savetty);

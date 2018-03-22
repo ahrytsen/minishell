@@ -6,7 +6,7 @@
 /*   By: ahrytsen <ahrytsen@student.unit.ua>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/12 15:02:36 by ahrytsen          #+#    #+#             */
-/*   Updated: 2018/03/17 15:14:17 by ahrytsen         ###   ########.fr       */
+/*   Updated: 2018/03/22 19:35:02 by ahrytsen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ int		ft_exit(char **av)
 {
 	char	*tmp;
 
-	ft_printf("exit\n");
+	ft_dprintf(2, "exit\n");
 	if (av && *av)
 	{
 		tmp = *av;
@@ -76,7 +76,7 @@ int		ft_setenv_builtin(char **av)
 	if (!av)
 		return (1);
 	else if (!*av)
-		ft_env_print();
+		ft_env_op(ENV_PRINT);
 	while (*av)
 	{
 		value = ft_strchr(*av, '=');

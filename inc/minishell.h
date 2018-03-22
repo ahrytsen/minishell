@@ -6,7 +6,7 @@
 /*   By: ahrytsen <ahrytsen@student.unit.ua>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/02 17:32:57 by ahrytsen          #+#    #+#             */
-/*   Updated: 2018/03/18 20:56:20 by ahrytsen         ###   ########.fr       */
+/*   Updated: 2018/03/22 15:49:22 by ahrytsen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,11 +24,15 @@
 # include <fcntl.h>
 # include <termios.h>
 
+# define ENV_PRINT 0
+# define ENV_CLEAR 1
+
 typedef struct	s_op
 {
 	int		v;
 	int		i;
-	char	*altpath;
+	char	*ap;
+	char	*p;
 	char	**exec;
 }				t_op;
 
@@ -86,7 +90,7 @@ int				ft_exit(char **av);
 int				main_loop(void);
 int				ft_exec(char **cmd, char *altpath);
 t_env			*msh_get_environ(void);
-void			ft_env_print(void);
+void			ft_env_op(int p);
 char			*ft_getenv(const char *name);
 int				ft_setenv(const char *name, const char *value, int overwrite);
 int				ft_unsetenv(const char *name);

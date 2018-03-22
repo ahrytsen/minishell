@@ -6,7 +6,7 @@
 /*   By: ahrytsen <ahrytsen@student.unit.ua>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/02 11:02:52 by ahrytsen          #+#    #+#             */
-/*   Updated: 2018/03/17 15:12:04 by ahrytsen         ###   ########.fr       */
+/*   Updated: 2018/03/22 20:01:46 by ahrytsen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ void	ft_prompt(void)
 {
 	char	pwd[MAXPATHLEN];
 
-	isatty(0) ? ft_printf("\033[33m%s \033[32m$>\033[0m ",
+	isatty(0) ? ft_dprintf(2, "\033[33m%s \033[32m$>\033[0m ",
 						getcwd(pwd, MAXPATHLEN)) : 0;
 }
 
@@ -25,10 +25,10 @@ void	sig_handler(int signo)
 	if (signo == SIGINT)
 	{
 		cmdline_free(msh_get_environ()->cursor);
-		if (isatty(0))
+		if (isatty(0) && !msh_get_environ()->pid)
 		{
-			ft_printf("\n");
-			!msh_get_environ()->pid ? ft_prompt() : 0;
+			ft_dprintf(2, "\n");
+			ft_prompt();
 		}
 	}
 	return ;

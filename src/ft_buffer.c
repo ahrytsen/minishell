@@ -6,7 +6,7 @@
 /*   By: ahrytsen <ahrytsen@student.unit.ua>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/28 19:01:15 by ahrytsen          #+#    #+#             */
-/*   Updated: 2018/03/07 21:40:53 by ahrytsen         ###   ########.fr       */
+/*   Updated: 2018/03/22 18:03:23 by ahrytsen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ char			*ft_buftostr(t_buf *buf_head)
 	char	*str;
 
 	b_size = ft_getbufsize(buf_head);
-	if (!buf_head || !b_size)
+	if (!buf_head)
 		return (ft_strdup(""));
 	if (!(str = ft_memalloc(sizeof(char) * (b_size + 1))))
 		malloc_fail();

@@ -6,7 +6,7 @@
 /*   By: ahrytsen <ahrytsen@student.unit.ua>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/07 20:08:03 by ahrytsen          #+#    #+#             */
-/*   Updated: 2018/03/13 19:39:03 by ahrytsen         ###   ########.fr       */
+/*   Updated: 2018/03/22 19:51:21 by ahrytsen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,43 +63,47 @@ void		ft_slash(t_buf **cur, char **line)
 	(*line)++;
 }
 
-static void	ft_bquote_child(int fd_get[2], int fd_put[2])
+static void	ft_bquote_child(int fd_get[2], char *cmds)
 {
-	int st;
+	int		i;
+	char	**cmd;
 
+	i = 0;
+	msh_get_environ()->pid = 1;
 	close(fd_get[0]);
-	close(fd_put[1]);
-	dup2(fd_put[0], 0);
 	dup2(fd_get[1], 1);
-	st = main_loop();
+	cmd = cmds ? msh_splitsemicolon(cmds) : NULL;
+	while (cmd && cmd[i])
+	{
+		msh_get_environ()->st = ft_exec(msh_splitwhitespaces(cmd[i]), NULL);
+		free(cmd[i++]);
+	}
+	free(cmd);
+	free(cmds);
 	close(fd_get[1]);
-	close(fd_put[0]);
-	exit(st);
+	exit(msh_get_environ()->st);
 }
 
 void		ft_bquote_helper(t_buf **cur, char *str)
 {
-	int		fd_put[2];
 	int		fd_get[2];
 	char	*line;
 	int		i;
 
-	pipe(fd_put);
+	i = 0;
 	pipe(fd_get);
-	if (fork() && (i = 1))
+	if ((msh_get_environ()->pid = fork()))
 	{
-		close(fd_put[0]);
 		close(fd_get[1]);
-		ft_dprintf(fd_put[1], "%s", str);
-		close(fd_put[1]);
-		while (get_next_line(fd_get[0], &line) == 1 && i++)
+		while (get_next_line(fd_get[0], &line) > 0)
 		{
-			i > 2 ? ft_putchar_mshbuf(cur, '\n') : 0;
+			i++ ? ft_putchar_mshbuf(cur, '\n') : 0;
 			ft_putstr_mshbuf(cur, line, -1);
 			free(line);
 		}
 		close(fd_get[0]);
+		msh_get_environ()->pid = 0;
 	}
 	else
-		ft_bquote_child(fd_get, fd_put);
+		ft_bquote_child(fd_get, str);
 }
